@@ -1,5 +1,10 @@
 #include "min_divisor.h"
 
 int64_t MinDivisor(int64_t number) {
-    return 2;
+    for (int64_t i = 2; i * i <= number; ++i) {
+        if (number % i == 0) {
+            return i;
+        }
+    }
+    return number;
 }
