@@ -9,6 +9,7 @@ bool IsPalindrome(const std::string& str) {
             continue;
         } else if (str[pointer2] == ' ') {
             --pointer2;
+            continue;
         }
         if (str[pointer1] != str[pointer2]) {
             return false;
