@@ -2,7 +2,7 @@
 
 bool IsPalindrome(const std::string& str) {
     int64_t pointer1 = 0;
-    int64_t pointer2 = str.length() - 1;
+    int64_t pointer2 = static_cast<int64_t>(str.length()) - 1;
     while (pointer1 < pointer2) {
         if (str[pointer1] == ' ') {
             ++pointer1;
