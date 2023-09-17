@@ -1,14 +1,12 @@
 #include "fibonacci.h"
-#include <vector>
 
 int64_t CalculateNthFibonacci(int64_t n) {
-    std::vector<int64_t> fibonacci(n + 1);
-    if (n == 0) {
-        return 0;
+    int64_t current_fib_number = 0;
+    int64_t next_fib_number = 1;
+    for (int64_t i = 0; i < n; ++i) {
+        int64_t calc_next_fib_number = current_fib_number + next_fib_number;
+        current_fib_number = next_fib_number;
+        next_fib_number = calc_next_fib_number;
     }
-    fibonacci[1] = 1;
-    for (int64_t i = 2; i <= n; ++i) {
-        fibonacci[i] = fibonacci[i - 2] + fibonacci[i - 1];
-    }
-    return fibonacci[n];
+    return current_fib_number;
 }
