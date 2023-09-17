@@ -1,12 +1,11 @@
 #include "password.h"
 
-const int8_t MINIMAL_ASCII = 33;
-const int8_t MAXIMAL_ASCII = 126;
-const int8_t MINIMAL_PASSWORD_SIZE = 8;
-const int8_t MAXIMAL_PASSWORD_SIZE = 14;
-const int8_t MINIMAL_CLASS_COUNT = 3;
-
 bool ValidatePassword(const std::string& password) {
+    static const char8_t MINIMAL_ASCII = 33;
+    static const char8_t MAXIMAL_ASCII = 126;
+    static const size_t MINIMAL_PASSWORD_SIZE = 8;
+    static const size_t MAXIMAL_PASSWORD_SIZE = 14;
+    static const int8_t MINIMAL_CLASS_COUNT = 3;
     if (password.size() < MINIMAL_PASSWORD_SIZE || password.size() > MAXIMAL_PASSWORD_SIZE) {
         return false;
     }
@@ -15,35 +14,28 @@ bool ValidatePassword(const std::string& password) {
             return false;
         }
     }
-    bool lower_letter_included = false;
-    bool upper_letter_included = false;
-    bool digit_included = false;
-    bool other_char_included = false;
+    bool has_lower_letter = false;
+    bool has_upper_letter = false;
+    bool has_digit = false;
+    bool has_other_char = false;
     for (const char8_t i : password) {
-        if (isalpha(i)) {
-            if (islower(i)) {
-                lower_letter_included = true;
+        if (std::isalpha(i)) {
+            if (std::islower(i)) {
+                has_lower_letter = true;
             } else {
-                upper_letter_included = true;
+                has_upper_letter = true;
             }
-        } else if (isdigit(i)) {
-            digit_included = true;
+        } else if (std::isdigit(i)) {
+            has_digit = true;
         } else {
-            other_char_included = true;
+            has_other_char = true;
         }
     }
     int8_t good_class_characters = 0;
-    if (lower_letter_included) {
-        ++good_class_characters;
-    }
-    if (upper_letter_included) {
-        ++good_class_characters;
-    }
-    if (digit_included) {
-        ++good_class_characters;
-    }
-    if (other_char_included) {
-        ++good_class_characters;
+    for (bool i : {has_lower_letter, has_upper_letter, has_digit, has_other_char}) {
+        if (i) {
+            ++good_class_characters;
+        }
     }
     if (good_class_characters >= MINIMAL_CLASS_COUNT) {
         return true;
