@@ -1,6 +1,9 @@
 #include "palindrome.h"
 
 bool IsPalindrome(const std::string& str) {
+    if (str.empty()) {
+        return true;
+    }
     size_t pointer1 = 0;
     size_t pointer2 = str.length() - 1;
     while (pointer1 < pointer2) {
