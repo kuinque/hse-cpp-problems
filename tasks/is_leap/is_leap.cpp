@@ -1,4 +1,3 @@
-#include <cstdint>
 #include "is_leap.h"
 
 bool IsLeap(int year) {
