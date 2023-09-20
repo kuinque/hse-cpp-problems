@@ -10,3 +10,4 @@ int64_t ReduceFraction(int64_t numerator, int64_t denominator) {
     }
     return numerator + denominator;
 }
+//так что не так то????
