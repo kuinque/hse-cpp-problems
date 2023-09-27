@@ -53,17 +53,15 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
         university_position[universities[pos].name] = pos;
     }
     std::vector<Applicant> applicants_copy = applicants;
-    std::sort(
-        applicants_copy.begin(), applicants_copy.end(),
+    std::sort(applicants_copy.begin(), applicants_copy.end(),
         [&](Applicant& left_applicant, Applicant& right_applicant) {
-        return (left_applicant > right_applicant);
-    });
+            return (left_applicant > right_applicant);
+        });
     std::vector<University> universities_copy = universities;
-    sort(
-        universities_copy.begin(), universities_copy.end(),
-        [&](University left_university, University right_university) {
-        return left_university.name > right_university.name;
-    });
+    sort(universities_copy.begin(), universities_copy.end(),
+         [&](University left_university, University right_university) {
+             return left_university.name > right_university.name;
+        });
     AdmissionTable universities_students;
     for (auto& university : universities_copy) {
         universities_students[university.name] = {};
@@ -81,11 +79,10 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
         }
     }
     for (auto& tmp : universities_students) {
-        std::sort(
-            tmp.second.begin(), tmp.second.end(),
-            [&](const Student* left_student, const Student* right_student){
-            return &left_student < &right_student;
-        });
+        std::sort(tmp.second.begin(), tmp.second.end(),
+            [&](const Student* left_student, const Student* right_student) {
+                return &left_student < &right_student;
+            });
     }
     return universities_students;
 }
