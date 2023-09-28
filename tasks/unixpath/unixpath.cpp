@@ -1,6 +1,6 @@
-#include "unixpath.h"
-
 #include <vector>
+
+#include "unixpath.h"
 
 std::string NormalizePath(std::string_view current_working_dir, std::string_view path) {
     std::vector<std::string> last_dirs;
@@ -22,9 +22,10 @@ std::string NormalizePath(std::string_view current_working_dir, std::string_view
                 current_dir.clear();
             }
             continue;
-        } else if (path[pos] == '.' && (pos + 1 == path.size() || path[pos + 1] != '.')) {
+        } else if ((pos == 0 || path[pos - 1] == '/') && path[pos] == '.' &&
+                   (pos + 1 == path.size() || path[pos + 1] != '.')) {
             continue;
-        } else if (path[pos] == '.') {
+        } else if ((pos == 0 || path[pos - 1] == '/') && path[pos] == '.') {
             if (!last_dirs.empty()) {
                 last_dirs.pop_back();
             }
