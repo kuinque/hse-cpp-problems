@@ -32,8 +32,8 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
         university_position[universities[pos].name] = pos;
     }
     std::vector<std::pair<Applicant, const Student*>> applicants_copy;
-    for (size_t p = 0; p < applicants.size(); ++p) {
-        applicants_copy.emplace_back(applicants[p], &applicants[p].student);
+    for (size_t pos = 0; pos < applicants.size(); ++pos) {
+        applicants_copy.emplace_back(applicants[pos], &applicants[pos].student);
     }
     auto applicant_compare = [](Applicant& left_applicant, Applicant& right_applicant) -> bool {
         if (left_applicant.points > right_applicant.points) {
