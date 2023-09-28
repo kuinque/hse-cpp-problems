@@ -63,8 +63,7 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
         return false;
     };
     std::sort(applicants_copy.begin(), applicants_copy.end(),
-              [&](const Applicant* left_applicant,
-                  const Applicant* right_applicant) {
+              [&](const Applicant* left_applicant, const Applicant* right_applicant) {
                   return applicant_compare(*left_applicant, *right_applicant);
               });
     AdmissionTable universities_students;
