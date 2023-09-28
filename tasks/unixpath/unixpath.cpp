@@ -37,8 +37,8 @@ std::string NormalizePath(std::string_view current_working_dir, std::string_view
         last_dirs.push_back(current_dir);
         current_dir.clear();
     }
-    std::string full_path = "";
-    for (std::string dir : last_dirs) {
+    std::string full_path;
+    for (std::string& dir : last_dirs) {
         full_path += "/";
         full_path += dir;
     }
