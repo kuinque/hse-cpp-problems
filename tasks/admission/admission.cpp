@@ -52,27 +52,31 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
     for (size_t pos = 0; pos < universities.size(); ++pos) {
         university_position[universities[pos].name] = pos;
     }
-    std::vector<Applicant> applicants_copy = applicants;
-    std::sort(
-        applicants_copy.begin(), applicants_copy.end(),
-        [&](Applicant& left_applicant, Applicant& right_applicant) { return (left_applicant > right_applicant); });
+    std::vector<std::pair<Applicant, const Student*>> applicants_copy;
+    for (size_t p = 0; p < applicants.size(); ++p) {
+        applicants_copy.emplace_back(applicants[p], &applicants[p].student);
+    }
+    std::sort(applicants_copy.begin(), applicants_copy.end(),
+              [&](std::pair<Applicant, const Student*>& left_applicant,
+                  std::pair<Applicant, const Student*>& right_applicant) {
+                  return (left_applicant.first > right_applicant.first);
+              });
     std::vector<University> universities_copy = universities;
     sort(universities_copy.begin(), universities_copy.end(),
          [&](University left_university, University right_university) {
-             return left_university.name > right_university.name;
+             return left_university.name < right_university.name;
          });
     AdmissionTable universities_students;
     for (auto& university : universities_copy) {
         universities_students[university.name] = {};
     }
-    for (Applicant& applicant : applicants_copy) {
-        for (std::string& wished_university : applicant.wish_list) {
+    for (std::pair<Applicant, const Student*>& applicant : applicants_copy) {
+        for (std::string& wished_university : applicant.first.wish_list) {
             if (universities_student_count[university_position[wished_university]] ==
                 universities[university_position[wished_university]].max_students) {
                 continue;
             }
-            Student* p = &applicant.student;
-            universities_students[wished_university].push_back(p);
+            universities_students[wished_university].push_back(applicant.second);
             ++universities_student_count[university_position[wished_university]];
             break;
         }
