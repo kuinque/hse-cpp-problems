@@ -1,7 +1,7 @@
-#include "admission.h"
-
 #include <unordered_map>
 #include <algorithm>
+
+#include "admission.h"
 
 bool operator<(const Date& left_date, const Date& right_date) {
     if (left_date.year < right_date.year) {
@@ -26,32 +26,30 @@ bool operator!=(const Date& left_date, const Date& right_date) {
 }
 
 AdmissionTable FillUniversities(const std::vector<University>& universities, const std::vector<Applicant>& applicants) {
-    std::unordered_map<std::string, size_t> university_position;
-    std::vector<size_t> universities_student_count(universities.size());
-    for (size_t pos = 0; pos < universities.size(); ++pos) {
-        university_position[universities[pos].name] = pos;
+    std::unordered_map<std::string, size_t> universities_student_left;
+    for (const University& university : universities) {
+        universities_student_left[university.name] = university.max_students;
     }
     std::vector<const Applicant*> applicants_copy;
-    for (size_t pos = 0; pos < applicants.size(); ++pos) {
-        applicants_copy.emplace_back(&applicants[pos]);
+    for (const Applicant& applicant : applicants) {
+        applicants_copy.emplace_back(&applicant);
     }
-    auto applicant_compare = [](const Applicant& left_applicant, const Applicant& right_applicant) -> bool {
-        if (left_applicant.points > right_applicant.points) {
+    auto applicant_compare = [](const Applicant* left_applicant, const Applicant* right_applicant) -> bool {
+        if (left_applicant->points > right_applicant->points) {
             return true;
-        } else if (left_applicant.points != right_applicant.points) {
+        } else if (left_applicant->points != right_applicant->points) {
             return false;
         }
-        if (left_applicant.student.birth_date < right_applicant.student.birth_date) {
+        if (left_applicant->student.birth_date < right_applicant->student.birth_date) {
             return true;
-        } else if (left_applicant.student.birth_date != right_applicant.student.birth_date) {
+        } else if (left_applicant->student.birth_date != right_applicant->student.birth_date) {
             return false;
         }
-        std::string left_student_name = left_applicant.student.name.substr(0, left_applicant.student.name.find(' '));
-        std::string right_student_name = right_applicant.student.name.substr(0, right_applicant.student.name.find(' '));
-        std::string left_student_surname = left_applicant.student.name.substr(
-            left_student_name.size() + 1, left_applicant.student.name.size() - (left_student_name.size() + 1));
-        std::string right_student_surname = right_applicant.student.name.substr(
-            right_student_name.size() + 1, right_applicant.student.name.size() - (right_student_name.size() + 1));
+        std::string left_student_name = left_applicant->student.name.substr(0, left_applicant->student.name.find(' '));
+        std::string right_student_name =
+            right_applicant->student.name.substr(0, right_applicant->student.name.find(' '));
+        std::string left_student_surname = left_applicant->student.name.substr(left_student_name.size() + 1);
+        std::string right_student_surname = right_applicant->student.name.substr(right_student_name.size() + 1);
         if (left_student_surname < right_student_surname) {
             return true;
         } else if (left_student_surname != right_student_surname) {
@@ -62,29 +60,23 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
         }
         return false;
     };
-    std::sort(applicants_copy.begin(), applicants_copy.end(),
-              [&](const Applicant* left_applicant, const Applicant* right_applicant) {
-                  return applicant_compare(*left_applicant, *right_applicant);
-              });
+    std::sort(applicants_copy.begin(), applicants_copy.end(), applicant_compare);
     AdmissionTable universities_students;
     for (const Applicant* applicant : applicants_copy) {
         for (const std::string& wished_university : applicant->wish_list) {
-            if (universities_student_count[university_position[wished_university]] ==
-                universities[university_position[wished_university]].max_students) {
+            if (!universities_student_left[wished_university]) {
                 continue;
             }
             universities_students[wished_university].push_back(&applicant->student);
-            ++universities_student_count[university_position[wished_university]];
+            --universities_student_left[wished_university];
             break;
         }
     }
-    auto students_compare = [](const Student& left_student, const Student& right_student) -> bool {
-        std::string left_student_name = left_student.name.substr(0, left_student.name.find(' '));
-        std::string right_student_name = right_student.name.substr(0, right_student.name.find(' '));
-        std::string left_student_surname = left_student.name.substr(
-            left_student_name.size() + 1, left_student.name.size() - (left_student_name.size() + 1));
-        std::string right_student_surname = right_student.name.substr(
-            right_student_name.size() + 1, right_student.name.size() - (right_student_name.size() + 1));
+    auto students_compare = [](const Student* left_student, const Student* right_student) -> bool {
+        std::string left_student_name = left_student->name.substr(0, left_student->name.find(' '));
+        std::string right_student_name = right_student->name.substr(0, right_student->name.find(' '));
+        std::string left_student_surname = left_student->name.substr(left_student_name.size() + 1);
+        std::string right_student_surname = right_student->name.substr(right_student_name.size() + 1);
         if (left_student_surname < right_student_surname) {
             return true;
         } else if (left_student_surname != right_student_surname) {
@@ -95,15 +87,13 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
         } else if (left_student_name != right_student_name) {
             return false;
         }
-        if (left_student.birth_date < right_student.birth_date) {
+        if (left_student->birth_date < right_student->birth_date) {
             return true;
         }
         return false;
     };
-    for (auto& tmp : universities_students) {
-        std::sort(tmp.second.begin(), tmp.second.end(), [&](const Student* left_student, const Student* right_student) {
-            return students_compare(*left_student, *right_student);
-        });
+    for (auto& [university, students] : universities_students) {
+        std::sort(students.begin(), students.end(), students_compare);
     }
     return universities_students;
 }
