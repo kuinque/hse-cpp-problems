@@ -1,6 +1,6 @@
-#include "scorer.h"
-
 #include <unordered_map>
+
+#include "scorer.h"
 
 ScoreTable GetScoredStudents(const Events& events, time_t score_time) {
     std::vector<const Event*> sorted_events;
