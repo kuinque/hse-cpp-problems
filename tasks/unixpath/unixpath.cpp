@@ -13,8 +13,10 @@ std::string NormalizePath(std::string_view current_working_dir, std::string_view
             current_dir += current_working_dir[pos];
         }
     }
-    last_dirs.push_back(current_dir);
-    current_dir.clear();
+    if (!last_dirs.empty()) {
+        last_dirs.push_back(current_dir);
+        current_dir.clear();
+    }
     std::vector<std::string> minor_dirs;
     for (size_t pos = 0; pos < path.size(); ++pos) {
         if (path[pos] == '/') {
@@ -26,7 +28,7 @@ std::string NormalizePath(std::string_view current_working_dir, std::string_view
     }
     minor_dirs.push_back(current_dir);
     current_dir.clear();
-    for (std::string dir : minor_dirs) {
+    for (std::string& dir : minor_dirs) {
         if (dir.empty() || dir == ".") {
             continue;
         }
