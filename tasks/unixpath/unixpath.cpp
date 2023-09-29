@@ -13,7 +13,7 @@ std::string NormalizePath(std::string_view current_working_dir, std::string_view
             current_dir += current_working_dir[pos];
         }
     }
-    if (!last_dirs.empty()) {
+    if (!current_dir.empty()) {
         last_dirs.push_back(current_dir);
         current_dir.clear();
     }
