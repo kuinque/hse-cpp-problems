@@ -31,13 +31,11 @@ std::string NormalizePath(std::string_view current_working_dir, std::string_view
     for (std::string& dir : minor_dirs) {
         if (dir.empty() || dir == ".") {
             continue;
-        }
-        else if (dir == "..") {
+        } else if (dir == "..") {
             if (!last_dirs.empty()) {
                 last_dirs.pop_back();
             }
-        }
-        else {
+        } else {
             last_dirs.push_back(dir);
         }
     }
