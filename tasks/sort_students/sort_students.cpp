@@ -23,7 +23,7 @@ bool operator!=(const Date& left_date, const Date& right_date) {
 }
 
 void SortStudents(std::vector<Student>& students, SortKind sortKind) {
-    auto students_compare_date = [](Student& left_student, Student& right_student) -> bool {
+    auto comparator_by_date = [](const Student& left_student, const Student& right_student) -> bool {
         if (left_student.birth_date < right_student.birth_date) {
             return true;
         } else if (left_student.birth_date != right_student.birth_date) {
@@ -40,7 +40,7 @@ void SortStudents(std::vector<Student>& students, SortKind sortKind) {
             return false;
         }
     };
-    auto students_compare_name = [](Student& left_student, Student& right_student) -> bool {
+    auto comparator_by_name = [](const Student& left_student, const Student& right_student) -> bool {
         if (left_student.last_name < right_student.last_name) {
             return true;
         } else if (left_student.last_name != right_student.last_name) {
@@ -57,8 +57,8 @@ void SortStudents(std::vector<Student>& students, SortKind sortKind) {
         return false;
     };
     if (sortKind == SortKind::Date) {
-        std::sort(students.begin(), students.end(), students_compare_date);
+        std::sort(students.begin(), students.end(), comparator_by_date);
     } else {
-        std::sort(students.begin(), students.end(), students_compare_name);
+        std::sort(students.begin(), students.end(), comparator_by_name);
     }
 }
