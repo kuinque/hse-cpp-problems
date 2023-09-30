@@ -14,21 +14,20 @@ std::string NormalizePath(std::string_view current_working_dir, std::string_view
             while (full_path[full_path_pointer] != '/') {
                 --full_path_pointer;
             }
+            if (full_path_pointer) {
+                --full_path_pointer;
+            }
             path_pointer += 2;
         } else if (full_path[path_pointer] == '/' && full_path[path_pointer + 1] == '.' &&
                    full_path[path_pointer + 2] == '/') {
             ++path_pointer;
-            continue;
         } else if (full_path[path_pointer + 1] != '/') {
-            ++path_pointer;
             if (full_path[full_path_pointer] != '/') {
                 ++full_path_pointer;
                 full_path[full_path_pointer] = '/';
             }
-            while (full_path[path_pointer] != '/') {
-                ++full_path_pointer;
-                full_path[full_path_pointer] = full_path[path_pointer];
-                ++path_pointer;
+            while (full_path[++path_pointer] != '/') {
+                full_path[++full_path_pointer] = full_path[path_pointer];
             }
             --path_pointer;
         }
