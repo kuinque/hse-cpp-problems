@@ -10,31 +10,29 @@ ScoreTable GetScoredStudents(const Events& events, time_t score_time) {
     std::sort(sorted_events.begin(), sorted_events.end(),
               [](const Event* left_event, const Event* right_event) { return left_event->time < right_event->time; });
     ScoreTable score_table;
-    std::map<StudentName, std::map<TaskName, bool>> students_tasks_status;
-    std::map<StudentName, std::set<TaskName>> students_merge_requests_status;
+    std::map<StudentName, std::map<TaskName, std::pair<bool, bool>>> students_tasks_status;
     for (const Event* event : sorted_events) {
         if (event->time > score_time) {
             break;
         }
         switch (event->event_type) {
             case EventType::CheckFailed:
-                students_tasks_status[event->student_name][event->task_name] = false;
+                students_tasks_status[event->student_name][event->task_name].first = false;
                 break;
             case EventType::CheckSuccess:
-                students_tasks_status[event->student_name][event->task_name] = true;
+                students_tasks_status[event->student_name][event->task_name].first = true;
                 break;
             case EventType::MergeRequestOpen:
-                students_merge_requests_status[event->student_name].insert(event->task_name);
+                students_tasks_status[event->student_name][event->task_name].second = true;
                 break;
             case EventType::MergeRequestClosed:
-                students_merge_requests_status[event->student_name].erase(event->task_name);
+                students_tasks_status[event->student_name][event->task_name].second = false;
                 break;
         }
     }
     for (const auto& [student_name, student_tasks_status] : students_tasks_status) {
         for (const auto& [task_name, task_status] : student_tasks_status) {
-            if (task_status && students_merge_requests_status[student_name].find(task_name) ==
-                                   students_merge_requests_status[student_name].end()) {
+            if (task_status.first && !task_status.second) {
                 score_table[student_name].insert(task_name);
             }
         }
