@@ -12,14 +12,9 @@ std::vector<std::string> StudentsOrder(const std::vector<StudentAction>& student
             tests_deque.push_front(student_action.name);
         }
     }
-    std::vector<std::string> tests;
-    while (!tests_deque.empty()) {
-        tests.push_back(tests_deque.front());
-        tests_deque.pop_front();
-    }
     std::vector<std::string> queries_answers(queries.size());
     for (size_t query_number = 0; query_number < queries.size(); ++query_number) {
-        queries_answers[query_number] = tests[queries[query_number] - 1];
+        queries_answers[query_number] = tests_deque[queries[query_number] - 1];
     }
     return queries_answers;
 }
