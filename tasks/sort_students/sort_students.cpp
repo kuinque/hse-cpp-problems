@@ -1,6 +1,6 @@
-#include <tuple>
-
 #include "sort_students.h"
+
+#include <tuple>
 
 bool operator<(const Date& left_date, const Date& right_date) {
     return std::tie(left_date.year, left_date.month, left_date.day) <
