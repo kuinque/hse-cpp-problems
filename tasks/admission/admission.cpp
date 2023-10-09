@@ -14,7 +14,7 @@ bool operator<(const Date& left_date, const Date& right_date) {
            std::tie(right_date.year, right_date.month, right_date.day);
 }
 
-bool applicant_compare(const Applicant* left_applicant, const Applicant* right_applicant) {
+bool ApplicantCompare(const Applicant* left_applicant, const Applicant* right_applicant) {
     if (left_applicant->points > right_applicant->points) {
         return true;
     } else if (left_applicant->points < right_applicant->points) {
@@ -28,7 +28,7 @@ bool applicant_compare(const Applicant* left_applicant, const Applicant* right_a
            std::tie(right_applicant->student.birth_date, right_student_surname, right_student_name);
 }
 
-bool students_compare(const Student* left_student, const Student* right_student) {
+bool StudentsCompare(const Student* left_student, const Student* right_student) {
     std::string left_student_name = left_student->name.substr(0, left_student->name.find(' '));
     std::string right_student_name = right_student->name.substr(0, right_student->name.find(' '));
     std::string left_student_surname = left_student->name.substr(left_student_name.size() + 1);
@@ -46,7 +46,7 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
     for (const Applicant& applicant : applicants) {
         applicants_copy.emplace_back(&applicant);
     }
-    std::sort(applicants_copy.begin(), applicants_copy.end(), applicant_compare);
+    std::sort(applicants_copy.begin(), applicants_copy.end(), ApplicantCompare);
     AdmissionTable universities_students;
     for (const Applicant* applicant : applicants_copy) {
         for (const std::string& wished_university : applicant->wish_list) {
@@ -59,7 +59,7 @@ AdmissionTable FillUniversities(const std::vector<University>& universities, con
         }
     }
     for (auto& [university, students] : universities_students) {
-        std::sort(students.begin(), students.end(), students_compare);
+        std::sort(students.begin(), students.end(), StudentsCompare);
     }
     return universities_students;
 }
