@@ -20,21 +20,13 @@ bool ApplicantCompare(const Applicant* left_applicant, const Applicant* right_ap
     } else if (left_applicant->points < right_applicant->points) {
         return false;
     }
-    std::string left_student_name = left_applicant->student.name.substr(0, left_applicant->student.name.find(' '));
-    std::string right_student_name = right_applicant->student.name.substr(0, right_applicant->student.name.find(' '));
-    std::string left_student_surname = left_applicant->student.name.substr(left_student_name.size() + 1);
-    std::string right_student_surname = right_applicant->student.name.substr(right_student_name.size() + 1);
-    return std::tie(left_applicant->student.birth_date, left_student_surname, left_student_name) <
-           std::tie(right_applicant->student.birth_date, right_student_surname, right_student_name);
+    return std::tie(left_applicant->student.birth_date, left_applicant->student.name) <
+           std::tie(right_applicant->student.birth_date, right_applicant->student.name);
 }
 
 bool StudentsCompare(const Student* left_student, const Student* right_student) {
-    std::string left_student_name = left_student->name.substr(0, left_student->name.find(' '));
-    std::string right_student_name = right_student->name.substr(0, right_student->name.find(' '));
-    std::string left_student_surname = left_student->name.substr(left_student_name.size() + 1);
-    std::string right_student_surname = right_student->name.substr(right_student_name.size() + 1);
-    return std::tie(left_student_surname, left_student_name, left_student->birth_date) <
-           std::tie(right_student_surname, right_student_name, right_student->birth_date);
+    return std::tie(left_student->name, left_student->birth_date) <
+           std::tie(right_student->name, right_student->birth_date);
 }
 
 AdmissionTable FillUniversities(const std::vector<University>& universities, const std::vector<Applicant>& applicants) {
