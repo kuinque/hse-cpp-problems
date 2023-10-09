@@ -39,7 +39,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
     text_stream.clear();
     for (size_t text_pointer = 0; text_pointer < text.size(); ++text_pointer) {
         size_t next_text_pointer = text_pointer;
-        while (text_pointer < text.size() && text[next_text_pointer] != '\n') {
+        while (next_text_pointer < text.size() && text[next_text_pointer] != '\n') {
             ++next_text_pointer;
         }
         std::string_view line = text.substr(text_pointer, next_text_pointer - text_pointer);
