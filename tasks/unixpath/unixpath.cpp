@@ -1,7 +1,7 @@
 #include "unixpath.h"
 
 std::string NormalizePath(std::string_view current_working_dir, std::string_view path) {
-    std::string full_path;
+    std::string full_path = "/";
     if (path.empty() || path[0] != '/') {
         full_path = static_cast<std::string>(current_working_dir) + "/";
     }
