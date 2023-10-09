@@ -1,9 +1,9 @@
 #include "search.h"
 
+#include <cmath>
 #include <unordered_map>
 #include <set>
 #include <sstream>
-#include <array>
 
 std::vector<std::string_view> Search(std::string_view text, std::string_view query, size_t results_count) {
     std::istringstream query_stream(static_cast<std::string>(query));
