@@ -6,7 +6,7 @@ int64_t CountPassports(const std::vector<int>& provinces) {
     for (const int& province : provinces) {
         merged_provinces.insert(province);
     }
-    while(merged_provinces.size() > 1) {
+    while (merged_provinces.size() > 1) {
         int64_t new_passports = 0;
         for (int i = 0; i < 2; ++i) {
             new_passports += *merged_provinces.begin();
