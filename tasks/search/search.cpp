@@ -20,8 +20,8 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         std::set<std::string> unique_words;
         line += " ";
         for (size_t i = 0; i < line.size(); ++i) {
-            if (isalpha(line[i])) {
-                word += tolower(line[i]);
+            if (std::isalpha(line[i])) {
+                word += std::tolower(line[i]);
             } else {
                 if (!word.empty() && query_words.find(word) != query_words.end()) {
                     unique_words.insert(word);
@@ -29,7 +29,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
                 word = "";
             }
         }
-        for (std::string unique_word : unique_words) {
+        for (const std::string& unique_word : unique_words) {
             ++unique_word_count[unique_word];
         }
     }
@@ -48,8 +48,8 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         std::string word;
         double word_count = 0;
         for (size_t i = 0; i < line.size(); ++i) {
-            if (isalpha(line[i])) {
-                word += tolower(line[i]);
+            if (std::isalpha(line[i])) {
+                word += std::tolower(line[i]);
             } else {
                 if (!word.empty()) {
                     ++word_count;
@@ -67,7 +67,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
             }
         }
         double best_line_relevant = 0;
-        for (std::string query_word : query_words) {
+        for (const std::string& query_word : query_words) {
             double relevant =
                 (word_occurrence[query_word] / word_count) * log(line_count / unique_word_count[query_word]);
             best_line_relevant = std::max(best_line_relevant, relevant);
