@@ -1,16 +1,16 @@
-#include <unordered_map>
-#include <algorithm>
-#include <tuple>
-
 #include "admission.h"
 
-bool operator<(const Date& left_date, const Date& right_date) {
-    return std::tie(left_date.year, left_date.month, left_date.day) <
-           std::tie(right_date.year, right_date.month, right_date.day);
-}
+#include <algorithm>
+#include <tuple>
+#include <unordered_map>
 
 bool operator!=(const Date& left_date, const Date& right_date) {
     return std::tie(left_date.year, left_date.month, left_date.day) !=
+           std::tie(right_date.year, right_date.month, right_date.day);
+}
+
+bool operator<(const Date& left_date, const Date& right_date) {
+    return std::tie(left_date.year, left_date.month, left_date.day) <
            std::tie(right_date.year, right_date.month, right_date.day);
 }
 
