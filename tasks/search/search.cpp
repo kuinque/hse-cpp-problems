@@ -21,7 +21,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         line += " ";
         for (size_t i = 0; i < line.size(); ++i) {
             if (std::isalpha(line[i])) {
-                word += std::tolower(line[i]);
+                word += tolower(line[i]);
             } else {
                 if (!word.empty() && query_words.find(word) != query_words.end()) {
                     unique_words.insert(word);
@@ -49,7 +49,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         double word_count = 0;
         for (size_t i = 0; i < line.size(); ++i) {
             if (std::isalpha(line[i])) {
-                word += std::tolower(line[i]);
+                word += tolower(line[i]);
             } else {
                 if (!word.empty()) {
                     ++word_count;
@@ -76,7 +76,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
             answer_lines.clear();
             best_relevant = best_line_relevant;
         }
-        if (best_line_relevant && best_relevant == best_line_relevant && answer_lines.size() < results_count) {
+        if (best_line_relevant > 0 && best_relevant == best_line_relevant && answer_lines.size() < results_count) {
             answer_lines.push_back(line);
         }
     }
