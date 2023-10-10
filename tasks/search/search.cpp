@@ -10,7 +10,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
     std::string word;
     for (size_t i = 0; i <= query.size(); ++i) {
         if (i < query.size() && std::isalpha(query[i])) {
-            word += std::tolower(static_cast<unsigned char>(query[i]));
+            word += static_cast<char>(std::tolower(query[i]));
         } else {
             if (!word.empty()) {
                 query_words.insert(word);
@@ -19,7 +19,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         }
     }
     std::unordered_map<std::string, double> unique_word_count;
-    double line_count = 0;
+    size_t line_count = 0;
     for (size_t text_pointer = 0; text_pointer < text.size(); ++text_pointer) {
         ++line_count;
         size_t next_text_pointer = text_pointer;
@@ -32,7 +32,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         std::set<std::string> unique_words;
         for (size_t i = 0; i <= line.size(); ++i) {
             if (i < line.size() && std::isalpha(line[i])) {
-                word += std::tolower(static_cast<unsigned char>(line[i]));
+                word += static_cast<char>(std::tolower(line[i]));
             } else {
                 if (!word.empty() && query_words.find(word) != query_words.end()) {
                     unique_words.insert(word);
@@ -56,9 +56,9 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         std::unordered_map<std::string, double> word_occurrence;
         word = "";
         double word_count = 0;
-        for (size_t i = 0; i < line.size(); ++i) {
-            if (std::isalpha(line[i])) {
-                word += std::tolower(static_cast<unsigned char>(line[i]));
+        for (size_t i = 0; i <= line.size(); ++i) {
+            if (i < line.size() && std::isalpha(line[i])) {
+                word += static_cast<char>(std::tolower(line[i]));
             } else {
                 if (!word.empty()) {
                     ++word_count;
@@ -69,16 +69,10 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
                 word = "";
             }
         }
-        if (!word.empty()) {
-            ++word_count;
-            if (query_words.find(word) != query_words.end()) {
-                ++word_occurrence[word];
-            }
-        }
         double best_line_relevant = 0;
         for (const std::string& query_word : query_words) {
-            double relevant =
-                (word_occurrence[query_word] / word_count) * log(line_count / unique_word_count[query_word]);
+            double relevant = (word_occurrence[query_word] / word_count) *
+                              log(static_cast<double>(line_count) / unique_word_count[query_word]);
             best_line_relevant = std::max(best_line_relevant, relevant);
         }
         if (best_line_relevant > 0) {
