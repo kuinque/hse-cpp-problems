@@ -29,7 +29,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         text_pointer = next_text_pointer;
         word.clear();
         std::set<std::string> unique_words;
-        bool has_words = 0;
+        bool has_words = false;
         for (size_t i = 0; i <= line.size(); ++i) {
             if (i < line.size() && std::isalpha(line[i])) {
                 word += static_cast<char>(std::tolower(line[i]));
