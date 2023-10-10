@@ -1,7 +1,7 @@
 #include "search.h"
 
 #include <cmath>
-#include <cstdint>
+#include <limits>
 #include <unordered_map>
 #include <set>
 #include <sstream>
