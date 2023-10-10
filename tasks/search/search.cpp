@@ -18,7 +18,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
             word.clear();
         }
     }
-    std::unordered_map<std::string, double> unique_word_count;
+    std::unordered_map<std::string, long double> unique_word_count;
     size_t line_count = 0;
     for (size_t text_pointer = 0; text_pointer < text.size(); ++text_pointer) {
         size_t next_text_pointer = text_pointer;
@@ -48,8 +48,8 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
             ++unique_word_count[unique_word];
         }
     }
-    std::vector<std::pair<double, size_t>> index_answer_strings;
-    std::set<std::tuple<double, size_t, std::string_view>> answer_strings_set;
+    std::vector<std::pair<long double, size_t>> index_answer_strings;
+    std::set<std::tuple<long double, size_t, std::string_view>> answer_strings_set;
     for (size_t text_pointer = 0, line_number = 0; text_pointer < text.size(); ++text_pointer) {
         size_t next_text_pointer = text_pointer;
         while (next_text_pointer < text.size() && text[next_text_pointer] != '\n') {
@@ -57,9 +57,9 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         }
         std::string_view line = text.substr(text_pointer, next_text_pointer - text_pointer);
         text_pointer = next_text_pointer;
-        std::unordered_map<std::string, double> word_occurrence;
+        std::unordered_map<std::string, long double> words_occurrence;
         word.clear();
-        double word_count = 0;
+        long double word_count = 0;
         for (size_t i = 0; i <= line.size(); ++i) {
             if (i < line.size() && std::isalpha(line[i])) {
                 word += static_cast<char>(std::tolower(line[i]));
@@ -67,7 +67,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
                 if (!word.empty()) {
                     ++word_count;
                     if (query_words.find(word) != query_words.end()) {
-                        ++word_occurrence[word];
+                        ++words_occurrence[word];
                     }
                 }
                 word.clear();
@@ -76,10 +76,10 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         if (word_count > 0) {
             ++line_number;
         }
-        double best_line_relevant = 0;
-        for (const std::string& query_word : query_words) {
-            double relevant = (word_occurrence[query_word] / word_count) *
-                              log(static_cast<double>(line_count) / unique_word_count[query_word]);
+        long double best_line_relevant = 0;
+        for (auto& [query_word, word_occurrence] : words_occurrence) {
+            long double relevant = (word_occurrence / word_count) *
+                              log(static_cast<long double>(line_count) / unique_word_count[query_word]);
             best_line_relevant = std::max(best_line_relevant, relevant);
         }
         if (best_line_relevant > 0) {
