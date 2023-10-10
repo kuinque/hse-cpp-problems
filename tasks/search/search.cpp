@@ -18,7 +18,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
             word.clear();
         }
     }
-    std::unordered_map<std::string, double> unique_word_count;
+    std::unordered_map<std::string, double> query_words_frequency;
     size_t line_count = 0;
     for (size_t text_pointer = 0; text_pointer < text.size(); ++text_pointer) {
         size_t next_text_pointer = text_pointer;
@@ -45,7 +45,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
             ++line_count;
         }
         for (const std::string& unique_word : unique_words) {
-            ++unique_word_count[unique_word];
+            ++query_words_frequency[unique_word];
         }
     }
     std::vector<std::pair<double, size_t>> index_answer_strings;
@@ -76,14 +76,14 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         if (word_count > 0) {
             ++line_number;
         }
-        double best_line_relevant = 0;
+        double sum_line_relevant = 0;
         for (auto& [query_word, word_occurrence] : words_occurrence) {
             double relevant =
-                (word_occurrence / word_count) * log(static_cast<double>(line_count) / unique_word_count[query_word]);
-            best_line_relevant += relevant;
+                (word_occurrence / word_count) * log(static_cast<double>(line_count) / query_words_frequency[query_word]);
+            sum_line_relevant += relevant;
         }
-        if (best_line_relevant > 0) {
-            answer_strings_set.insert(std::make_tuple(best_line_relevant, line_count - line_number, line));
+        if (word_count > 0) {
+            answer_strings_set.insert(std::make_tuple(sum_line_relevant, line_count - line_number, line));
         }
         if (answer_strings_set.size() > results_count) {
             answer_strings_set.erase(answer_strings_set.begin());
