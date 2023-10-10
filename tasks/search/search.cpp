@@ -75,6 +75,8 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         }
         if (word_count > 0) {
             ++word_count;
+        } else {
+            continue;
         }
         double best_line_relevant = 0;
         for (const std::string& query_word : query_words) {
@@ -82,7 +84,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
                               log(static_cast<double>(line_count) / unique_word_count[query_word]);
             best_line_relevant = std::max(best_line_relevant, relevant);
         }
-        if (best_line_relevant > 0) {
+        if (best_line_relevant >= 0) {
             answer_strings_set.insert(std::make_tuple(best_line_relevant, line_count - line_number, line));
         }
         if (answer_strings_set.size() > results_count) {
