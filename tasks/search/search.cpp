@@ -21,7 +21,6 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
     std::unordered_map<std::string, double> unique_word_count;
     size_t line_count = 0;
     for (size_t text_pointer = 0; text_pointer < text.size(); ++text_pointer) {
-        ++line_count;
         size_t next_text_pointer = text_pointer;
         while (next_text_pointer < text.size() && text[next_text_pointer] != '\n') {
             ++next_text_pointer;
@@ -30,15 +29,20 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         text_pointer = next_text_pointer;
         word.clear();
         std::set<std::string> unique_words;
+        bool has_words = 0;
         for (size_t i = 0; i <= line.size(); ++i) {
             if (i < line.size() && std::isalpha(line[i])) {
                 word += static_cast<char>(std::tolower(line[i]));
+                has_words = true;
             } else {
                 if (!word.empty() && query_words.find(word) != query_words.end()) {
                     unique_words.insert(word);
                 }
                 word.clear();
             }
+        }
+        if (has_words) {
+            ++line_count;
         }
         for (const std::string& unique_word : unique_words) {
             ++unique_word_count[unique_word];
@@ -54,7 +58,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         std::string_view line = text.substr(text_pointer, next_text_pointer - text_pointer);
         text_pointer = next_text_pointer;
         std::unordered_map<std::string, double> word_occurrence;
-        word = "";
+        word.clear();
         double word_count = 0;
         for (size_t i = 0; i <= line.size(); ++i) {
             if (i < line.size() && std::isalpha(line[i])) {
@@ -66,7 +70,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
                         ++word_occurrence[word];
                     }
                 }
-                word = "";
+                word.clear();
             }
         }
         double best_line_relevant = 0;
