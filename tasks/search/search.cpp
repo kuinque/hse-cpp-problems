@@ -1,7 +1,6 @@
 #include "search.h"
 
 #include <cmath>
-#include <limits>
 #include <unordered_map>
 #include <set>
 #include <sstream>
@@ -83,7 +82,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
             best_line_relevant = std::max(best_line_relevant, relevant);
         }
         if (best_line_relevant > 0) {
-            answer_strings_set.insert(std::make_tuple(best_line_relevant, ULONG_MAX - line_number, line));
+            answer_strings_set.insert(std::make_tuple(best_line_relevant, line_count - line_number, line));
         }
         if (answer_strings_set.size() > results_count) {
             answer_strings_set.erase(answer_strings_set.begin());
