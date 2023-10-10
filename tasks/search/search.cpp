@@ -50,7 +50,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
     }
     std::vector<std::pair<double, size_t>> index_answer_strings;
     std::set<std::tuple<double, size_t, std::string_view>> answer_strings_set;
-    for (size_t text_pointer = 0, line_number = 0; text_pointer < text.size(); ++text_pointer, ++line_number) {
+    for (size_t text_pointer = 0, line_number = 0; text_pointer < text.size(); ++text_pointer) {
         size_t next_text_pointer = text_pointer;
         while (next_text_pointer < text.size() && text[next_text_pointer] != '\n') {
             ++next_text_pointer;
@@ -72,6 +72,9 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
                 }
                 word.clear();
             }
+        }
+        if (word_count > 0) {
+            ++word_count;
         }
         double best_line_relevant = 0;
         for (const std::string& query_word : query_words) {
