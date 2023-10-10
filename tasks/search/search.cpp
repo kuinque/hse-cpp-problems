@@ -78,8 +78,8 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         }
         double best_line_relevant = 0;
         for (auto& [query_word, word_occurrence] : words_occurrence) {
-            double relevant = (word_occurrence / word_count) *
-                              log(static_cast<double>(line_count) / unique_word_count[query_word]);
+            double relevant =
+                (word_occurrence / word_count) * log(static_cast<double>(line_count) / unique_word_count[query_word]);
             best_line_relevant += relevant;
         }
         if (best_line_relevant > 0) {
