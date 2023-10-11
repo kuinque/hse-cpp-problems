@@ -26,7 +26,19 @@ public:
         if (denom == 0) {
             RationalDivisionByZero();
         }
+        bool is_negative = false;
+        if (numer < 0) {
+            numer *= -1;
+            is_negative ^= true;
+        }
+        if (denom < 0) {
+            denom *= -1;
+            is_negative ^= true;
+        }
         int gcd = std::gcd(numer, denom);
+        if (is_negative) {
+            numer *= -1;
+        }
         SetNumerator(numer / gcd);
         SetDenominator(denom / gcd);
     }
@@ -46,6 +58,10 @@ public:
     void SetDenominator(int value) {
         if (value == 0) {
             RationalDivisionByZero();
+        }
+        if (value < 0) {
+            value *= -1;
+            numer_ *= -1;
         }
         denom_ = value;
     }
@@ -170,15 +186,11 @@ inline bool operator>=(const Rational& lhs, const Rational& rhs) {
 }
 
 inline bool operator==(const Rational& lhs, const Rational& rhs) {
-    int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
-    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) ==
-            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
+    return lhs.GetNumerator() == rhs.GetNumerator() && lhs.GetDenominator() == rhs.GetDenominator();
 }
 
 inline bool operator!=(const Rational& lhs, const Rational& rhs) {
-    int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
-    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) !=
-            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
+    return lhs.GetNumerator() != rhs.GetNumerator() || lhs.GetDenominator() != rhs.GetDenominator();
 }
 
 inline std::ostream& operator<<(std::ostream& os, const Rational& ratio) {
