@@ -93,11 +93,11 @@ private:
     int denom_;
 };
 
-Rational operator+(const Rational& ratio) {
+inline Rational operator+(const Rational& ratio) {
     return ratio;
 }
 
-Rational operator-(const Rational& ratio) {
+inline Rational operator-(const Rational& ratio) {
     return *new Rational(-ratio.GetNumerator(), ratio.GetDenominator());
 }
 
