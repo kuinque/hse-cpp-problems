@@ -75,8 +75,8 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         }
         double sum_line_relevant = 0;
         for (auto& [query_word, word_occurrence] : words_occurrence) {
-            double relevant =
-                (word_occurrence / word_count) * log(static_cast<double>(line_count) / query_words_frequency[query_word]);
+            double relevant = (word_occurrence / word_count) *
+                              log(static_cast<double>(line_count) / query_words_frequency[query_word]);
             sum_line_relevant += relevant;
         }
         if (sum_line_relevant > 0) {
