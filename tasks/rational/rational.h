@@ -24,7 +24,7 @@ public:
 
     Rational(int numer, int denom) {
         if (denom == 0) {
-            RationalDivisionByZero();
+            throw RationalDivisionByZero();
         }
         bool is_negative = false;
         if (numer < 0) {
@@ -57,7 +57,7 @@ public:
 
     void SetDenominator(int value) {
         if (value == 0) {
-            RationalDivisionByZero();
+            throw RationalDivisionByZero();
         }
         if (value < 0) {
             value *= -1;
@@ -98,7 +98,7 @@ public:
 private:
     void Set(int64_t numer, int64_t denom) {
         if (denom == 0) {
-            RationalDivisionByZero();
+            throw RationalDivisionByZero();
         }
         int64_t gcd = std::gcd(numer, denom);
         SetNumerator(static_cast<int>(numer / gcd));
@@ -194,6 +194,9 @@ inline bool operator!=(const Rational& lhs, const Rational& rhs) {
 }
 
 inline std::ostream& operator<<(std::ostream& os, const Rational& ratio) {
-    os << ratio.GetNumerator() << ratio.GetDenominator();
+    os << ratio.GetNumerator();
+    if (ratio.GetDenominator() != 1) {
+        os << '/' << ratio.GetDenominator();
+    }
     return os;
 }
