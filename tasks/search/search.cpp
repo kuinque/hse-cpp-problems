@@ -90,5 +90,6 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
     for (auto iterator = answer_strings_set.begin(); iterator != answer_strings_set.end(); ++iterator) {
         answer_lines.push_back(get<2>(*iterator));
     }
+    std::reverse(answer_lines.begin(), answer_lines.end());
     return answer_lines;
 }
