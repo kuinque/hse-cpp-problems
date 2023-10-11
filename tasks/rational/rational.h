@@ -13,13 +13,13 @@ public:
 class Rational {
 public:
     Rational() {
-        numer_ = 0;
-        denom_ = 1;
+        SetNumerator(0);
+        SetDenominator(1);
     }
 
     Rational(int value) {  // NOLINT
-        numer_ = value;
-        denom_ = 1;
+        SetNumerator(value);
+        SetDenominator(1);
     }
 
     Rational(int numer, int denom) {
@@ -27,8 +27,8 @@ public:
             RationalDivisionByZero();
         }
         int gcd = std::gcd(numer, denom);
-        numer_ = numer / gcd;
-        denom_ = denom / gcd;
+        SetNumerator(numer / gcd);
+        SetDenominator(denom / gcd);
     }
 
     int GetNumerator() const {
@@ -85,8 +85,8 @@ private:
             RationalDivisionByZero();
         }
         int64_t gcd = std::gcd(numer, denom);
-        numer_ = static_cast<int>(numer / gcd);
-        denom_ = static_cast<int>(denom / gcd);
+        SetNumerator(static_cast<int>(numer / gcd));
+        SetDenominator(static_cast<int>(denom / gcd));
     }
 
     int numer_;
