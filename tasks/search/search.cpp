@@ -11,10 +11,10 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
     for (size_t i = 0; i <= query.size(); ++i) {
         if (i < query.size() && std::isalpha(query[i])) {
             word += static_cast<char>(std::tolower(query[i]));
-        } else {
-            if (!word.empty()) {
-                query_words.insert(word);
-            }
+            continue;
+        }
+        if (!word.empty()) {
+            query_words.insert(word);
             word.clear();
         }
     }
@@ -34,12 +34,12 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
             if (i < line.size() && std::isalpha(line[i])) {
                 word += static_cast<char>(std::tolower(line[i]));
                 has_words = true;
-            } else {
-                if (!word.empty() && query_words.find(word) != query_words.end()) {
-                    unique_words.insert(word);
-                }
-                word.clear();
+                continue;
             }
+            if (!word.empty() && query_words.find(word) != query_words.end()) {
+                unique_words.insert(word);
+            }
+            word.clear();
         }
         if (has_words) {
             ++line_count;
@@ -62,7 +62,9 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         for (size_t i = 0; i <= line.size(); ++i) {
             if (i < line.size() && std::isalpha(line[i])) {
                 word += static_cast<char>(std::tolower(line[i]));
-            } else if (!word.empty()) {
+                continue;
+            }
+            if (!word.empty()) {
                 ++word_count;
                 if (query_words.find(word) != query_words.end()) {
                     ++words_occurrence[word];
