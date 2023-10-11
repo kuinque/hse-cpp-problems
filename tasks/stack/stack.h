@@ -47,7 +47,7 @@ public:
     }
 
     int32_t Size() const {
-        return static_cast<int32_t> (size_);
+        return static_cast<int32_t>(size_);
     }
 
     void Clear() {
