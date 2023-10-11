@@ -23,7 +23,12 @@ public:
     }
 
     ~Stack() {
-        delete head_;
+        while (head_ != nullptr) {
+            Node* tmp = head_->previous;
+            delete head_;
+            head_ = tmp;
+        }
+        size_ = 0;
     }
 
     void Push(int32_t value) {
@@ -56,6 +61,7 @@ public:
             delete head_;
             head_ = tmp;
         }
+        size_ = 0;
     }
 
     bool Empty() {
