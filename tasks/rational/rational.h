@@ -101,87 +101,87 @@ inline Rational operator-(const Rational& ratio) {
     return *new Rational(-ratio.GetNumerator(), ratio.GetDenominator());
 }
 
-Rational& operator-=(Rational& lhs, const Rational& rhs) {
+inline Rational& operator-=(Rational& lhs, const Rational& rhs) {
     return lhs += -rhs;
 }
 
-Rational& operator/=(Rational& lhs, const Rational& rhs) {
+inline Rational& operator/=(Rational& lhs, const Rational& rhs) {
     return lhs *= *new Rational(rhs.GetDenominator(), rhs.GetNumerator());
 }
 
-Rational operator+(const Rational& lhs, const Rational& rhs) {
+inline Rational operator+(const Rational& lhs, const Rational& rhs) {
     Rational ratio = lhs;
     ratio += rhs;
     return ratio;
 }
 
-Rational operator-(const Rational& lhs, const Rational& rhs) {
+inline Rational operator-(const Rational& lhs, const Rational& rhs) {
     Rational ratio = lhs;
     ratio -= rhs;
     return ratio;
 }
 
-Rational operator*(const Rational& lhs, const Rational& rhs) {
+inline Rational operator*(const Rational& lhs, const Rational& rhs) {
     Rational ratio = lhs;
     ratio *= rhs;
     return ratio;
 }
 
-Rational operator/(const Rational& lhs, const Rational& rhs) {
+inline Rational operator/(const Rational& lhs, const Rational& rhs) {
     Rational ratio = lhs;
     ratio /= rhs;
     return ratio;
 }
 
-Rational operator++(Rational& ratio, int) {
+inline Rational operator++(Rational& ratio, int) {
     Rational ration_copy = ratio;
     ++ratio;
     return ration_copy;
 }
 
-Rational operator--(Rational& ratio, int) {
+inline Rational operator--(Rational& ratio, int) {
     Rational ration_copy = ratio;
     --ratio;
     return ration_copy;
 }
 
-bool operator<(const Rational& lhs, const Rational& rhs) {
+inline bool operator<(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) <
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
-bool operator>(const Rational& lhs, const Rational& rhs) {
+inline bool operator>(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) >
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
-bool operator<=(const Rational& lhs, const Rational& rhs) {
+inline bool operator<=(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) <=
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
-bool operator>=(const Rational& lhs, const Rational& rhs) {
+inline bool operator>=(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) >=
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
-bool operator==(const Rational& lhs, const Rational& rhs) {
+inline bool operator==(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) ==
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
-bool operator!=(const Rational& lhs, const Rational& rhs) {
+inline bool operator!=(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) !=
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
-std::ostream& operator<<(std::ostream& os, const Rational& ratio) {
+inline std::ostream& operator<<(std::ostream& os, const Rational& ratio) {
     os << ratio.GetNumerator() << ratio.GetDenominator();
     return os;
 }
