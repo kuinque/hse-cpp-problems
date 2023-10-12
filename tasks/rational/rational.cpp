@@ -49,9 +49,9 @@ void Rational::SetDenominator(int value) {
 
 Rational& operator+=(Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(lhs.denom_, rhs.denom_);
-    lhs.Set(static_cast<int64_t>(lhs.numer_) * (lcm / lhs.denom_) +
-                static_cast<int64_t>(rhs.numer_) * (lcm / rhs.denom_),
-            lcm);
+    lhs.Set(
+        static_cast<int64_t>(lhs.numer_) * (lcm / lhs.denom_) + static_cast<int64_t>(rhs.numer_) * (lcm / rhs.denom_),
+        lcm);
     return lhs;
 }
 
