@@ -7,19 +7,20 @@
 
 std::vector<std::string_view> Search(std::string_view text, std::string_view query, size_t results_count) {
     std::set<std::string> query_words;
-    std::string word;
+    std::string word_from_query;
     for (size_t i = 0; i <= query.size(); ++i) {
         if (i < query.size() && std::isalpha(query[i])) {
-            word += static_cast<char>(std::tolower(query[i]));
+            word_from_query += static_cast<char>(std::tolower(query[i]));
             continue;
         }
-        if (!word.empty()) {
-            query_words.insert(word);
-            word.clear();
+        if (!word_from_query.empty()) {
+            query_words.insert(word_from_query);
+            word_from_query.clear();
         }
     }
     std::unordered_map<std::string, double> query_words_frequency;
     size_t line_count = 0;
+    std::string word_frequency;
     for (size_t text_pointer = 0; text_pointer < text.size(); ++text_pointer) {
         size_t next_text_pointer = text_pointer;
         while (next_text_pointer < text.size() && text[next_text_pointer] != '\n') {
@@ -27,19 +28,19 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         }
         std::string_view line = text.substr(text_pointer, next_text_pointer - text_pointer);
         text_pointer = next_text_pointer;
-        word.clear();
+        word_frequency.clear();
         std::set<std::string> unique_words;
         bool has_words = false;
         for (size_t i = 0; i <= line.size(); ++i) {
             if (i < line.size() && std::isalpha(line[i])) {
-                word += static_cast<char>(std::tolower(line[i]));
+                word_frequency += static_cast<char>(std::tolower(line[i]));
                 has_words = true;
                 continue;
             }
-            if (!word.empty() && query_words.find(word) != query_words.end()) {
-                unique_words.insert(word);
+            if (!word_frequency.empty() && query_words.find(word_frequency) != query_words.end()) {
+                unique_words.insert(word_frequency);
             }
-            word.clear();
+            word_frequency.clear();
         }
         if (has_words) {
             ++line_count;
@@ -49,6 +50,7 @@ std::vector<std::string_view> Search(std::string_view text, std::string_view que
         }
     }
     std::set<std::tuple<double, size_t, std::string_view>> answer_strings_set;
+    std::string word;
     for (size_t text_pointer = 0, line_number = 0; text_pointer < text.size(); ++text_pointer) {
         size_t next_text_pointer = text_pointer;
         while (next_text_pointer < text.size() && text[next_text_pointer] != '\n') {
