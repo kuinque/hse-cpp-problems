@@ -1,13 +1,13 @@
 #include "rational.h"
 
 Rational::Rational() {
-    SetNumerator(0);
-    SetDenominator(1);
+    numer_ = 0;
+    denom_ = 1;
 }
 
 Rational::Rational(int value) {  // NOLINT
-    SetNumerator(value);
-    SetDenominator(1);
+    numer_ = value;
+    denom_ = 1;
 }
 
 Rational::Rational(int numer, int denom) {
@@ -84,8 +84,8 @@ void Rational::Set(int64_t numer, int64_t denom) {
         throw RationalDivisionByZero();
     }
     int64_t gcd = std::gcd(numer, denom);
-    SetNumerator(static_cast<int>(numer / gcd));
-    SetDenominator(static_cast<int>(denom / gcd));
+    numer_ = static_cast<int>(numer / gcd);
+    denom_ = static_cast<int>(denom / gcd);
 }
 
 Rational operator+(const Rational& ratio) {
