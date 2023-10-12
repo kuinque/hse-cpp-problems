@@ -74,12 +74,8 @@ Rational& operator--(Rational& ratio) {
 std::istream& operator>>(std::istream& is, Rational& ratio) {
     int numer = 1;
     int denom = 1;
-    is >> numer;
-    ratio = Rational(numer);
-    if (is.rdbuf()->in_avail() > 0) {
-        is >> denom;
-        ratio = Rational(numer, denom);
-    }
+    is >> numer >> denom;
+    ratio = Rational(numer, denom);
     return is;
 }
 
@@ -94,7 +90,7 @@ Rational operator+(const Rational& ratio) {
 }
 
 Rational operator-(const Rational& ratio) {
-    return *new Rational(-ratio.GetNumerator(), ratio.GetDenominator());
+    return Rational(-ratio.GetNumerator(), ratio.GetDenominator());
 }
 
 Rational& operator-=(Rational& lhs, const Rational& rhs) {
@@ -102,7 +98,7 @@ Rational& operator-=(Rational& lhs, const Rational& rhs) {
 }
 
 Rational& operator/=(Rational& lhs, const Rational& rhs) {
-    return lhs *= *new Rational(rhs.GetDenominator(), rhs.GetNumerator());
+    return lhs *= Rational(rhs.GetDenominator(), rhs.GetNumerator());
 }
 
 Rational operator+(const Rational& lhs, const Rational& rhs) {
@@ -143,26 +139,26 @@ Rational operator--(Rational& ratio, int) {
 
 bool operator<(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(static_cast<int64_t>(lhs.GetDenominator()), static_cast<int64_t>(rhs.GetDenominator()));
-    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) <
-            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
+    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / static_cast<int64_t>(lhs.GetDenominator())) <
+            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / static_cast<int64_t>(rhs.GetDenominator())));
 }
 
 bool operator>(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(static_cast<int64_t>(lhs.GetDenominator()), static_cast<int64_t>(rhs.GetDenominator()));
-    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) >
-            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
+    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / static_cast<int64_t>(lhs.GetDenominator())) >
+            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / static_cast<int64_t>(rhs.GetDenominator())));
 }
 
 bool operator<=(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(static_cast<int64_t>(lhs.GetDenominator()), static_cast<int64_t>(rhs.GetDenominator()));
-    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) <=
-            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
+    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / static_cast<int64_t>(lhs.GetDenominator())) <=
+            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / static_cast<int64_t>(rhs.GetDenominator())));
 }
 
 bool operator>=(const Rational& lhs, const Rational& rhs) {
     int64_t lcm = std::lcm(static_cast<int64_t>(lhs.GetDenominator()), static_cast<int64_t>(rhs.GetDenominator()));
-    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) >=
-            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
+    return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / static_cast<int64_t>(lhs.GetDenominator())) >=
+            static_cast<int64_t>(rhs.GetNumerator()) * (lcm / static_cast<int64_t>(rhs.GetDenominator())));
 }
 
 bool operator==(const Rational& lhs, const Rational& rhs) {
