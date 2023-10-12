@@ -66,7 +66,17 @@ Rational& operator--(Rational& ratio) {
 std::istream& operator>>(std::istream& is, Rational& ratio) {
     int numer = 1;
     int denom = 1;
-    is >> numer >> denom;
+    if (!(is >> numer)) {
+        ratio = Rational();
+        return is;
+    }
+    if (is.peek() == '/') {
+        is.ignore(1);
+        if (!(is >> denom)) {
+            ratio = Rational(numer);
+            return is;
+        }
+    }
     ratio = Rational(numer, denom);
     return is;
 }
