@@ -80,10 +80,7 @@ std::istream& operator>>(std::istream& is, Rational& ratio) {
 }
 
 void Rational::Set(int64_t numer, int64_t denom) {
-    if (denom == 0) {
-        throw RationalDivisionByZero();
-    }
-    int64_t gcd = std::gcd(numer, denom);
+    int64_t gcd = std::gcd(abs(numer), denom);
     numer_ = static_cast<int>(numer / gcd);
     denom_ = static_cast<int>(denom / gcd);
 }
@@ -141,25 +138,25 @@ Rational operator--(Rational& ratio, int) {
 }
 
 bool operator<(const Rational& lhs, const Rational& rhs) {
-    int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
+    int64_t lcm = std::lcm(static_cast<int64_t>(lhs.GetDenominator()), static_cast<int64_t>(rhs.GetDenominator()));
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) <
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
 bool operator>(const Rational& lhs, const Rational& rhs) {
-    int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
+    int64_t lcm = std::lcm(static_cast<int64_t>(lhs.GetDenominator()), static_cast<int64_t>(rhs.GetDenominator()));
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) >
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
 bool operator<=(const Rational& lhs, const Rational& rhs) {
-    int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
+    int64_t lcm = std::lcm(static_cast<int64_t>(lhs.GetDenominator()), static_cast<int64_t>(rhs.GetDenominator()));
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) <=
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
 
 bool operator>=(const Rational& lhs, const Rational& rhs) {
-    int64_t lcm = std::lcm(lhs.GetDenominator(), rhs.GetDenominator());
+    int64_t lcm = std::lcm(static_cast<int64_t>(lhs.GetDenominator()), static_cast<int64_t>(rhs.GetDenominator()));
     return (static_cast<int64_t>(lhs.GetNumerator()) * (lcm / lhs.GetDenominator()) >=
             static_cast<int64_t>(rhs.GetNumerator()) * (lcm / rhs.GetDenominator()));
 }
