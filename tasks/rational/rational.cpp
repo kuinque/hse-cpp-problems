@@ -72,8 +72,8 @@ Rational& operator--(Rational& ratio) {
 }
 
 std::istream& operator>>(std::istream& is, Rational& ratio) {
-    int numer = 0;
-    int denom = 0;
+    int numer = 1;
+    int denom = 1;
     is >> numer;
     ratio = Rational(numer);
     if (is.rdbuf()->in_avail() > 0) {
