@@ -5,10 +5,7 @@
 struct Node {
     int32_t value;
     Node* previous;
-    Node(int32_t value, Node* previous) {
-        this->value = value;
-        this->previous = previous;
-    }
+    Node(int32_t value, Node* previous);
 };
 
 class Stack {
@@ -17,54 +14,19 @@ private:
     int size_;
 
 public:
-    Stack() {
-        head_ = nullptr;
-        size_ = 0;
-    }
+    Stack();
 
-    ~Stack() {
-        while (head_ != nullptr) {
-            Node* tmp = head_->previous;
-            delete head_;
-            head_ = tmp;
-        }
-        size_ = 0;
-    }
+    ~Stack();
 
-    void Push(int32_t value) {
-        ++size_;
-        Node* tmp = new Node(value, head_);
-        head_ = tmp;
-    }
+    void Push(int32_t value);
 
-    void Pop() {
-        if (head_ == nullptr) {
-            return;
-        }
-        --size_;
-        Node* tmp = head_->previous;
-        delete head_;
-        head_ = tmp;
-    }
+    void Pop();
 
-    int32_t Top() {
-        return head_->value;
-    }
+    int32_t Top() const;
 
-    int32_t Size() const {
-        return static_cast<int32_t>(size_);
-    }
+    int32_t Size() const;
 
-    void Clear() {
-        while (head_ != nullptr) {
-            Node* tmp = head_->previous;
-            delete head_;
-            head_ = tmp;
-        }
-        size_ = 0;
-    }
+    void Clear();
 
-    bool Empty() {
-        return (head_ == nullptr);
-    }
+    bool Empty() const;
 };
