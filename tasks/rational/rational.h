@@ -52,18 +52,11 @@ public:
     }
 
     void SetNumerator(int value) {
-        numer_ = value;
+        *this = Rational(value, denom_);
     }
 
     void SetDenominator(int value) {
-        if (value == 0) {
-            throw RationalDivisionByZero();
-        }
-        if (value < 0) {
-            value *= -1;
-            numer_ *= -1;
-        }
-        denom_ = value;
+        *this = Rational(numer_, value);
     }
 
     friend Rational& operator+=(Rational& lhs, const Rational& rhs) {
