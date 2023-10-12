@@ -12,7 +12,7 @@ Rational::Rational(int value) {  // NOLINT
 
 Rational::Rational(int numer, int denom) {
     if (denom == 0) {
-        throw RationalDivisionByZero();
+        throw RationalDivisionByZero{};
     }
     if (denom < 0) {
         denom *= -1;
