@@ -91,7 +91,10 @@ public:
     }
 
     friend std::istream& operator>>(std::istream& is, Rational& ratio) {
-        is >> ratio.numer_ >> ratio.denom_;
+        int64_t numer;
+        int64_t denom;
+        is >> numer >> denom;
+        ratio.Set(numer, denom);
         return is;
     }
 
