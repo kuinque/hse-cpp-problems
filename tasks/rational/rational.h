@@ -91,8 +91,8 @@ public:
     }
 
     friend std::istream& operator>>(std::istream& is, Rational& ratio) {
-        int numer;
-        int denom;
+        int numer = 0;
+        int denom = 0;
         is >> numer >> denom;
         ratio = Rational(numer, denom);
         return is;
