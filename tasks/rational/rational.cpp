@@ -83,8 +83,7 @@ std::istream& operator>>(std::istream& is, Rational& ratio) {
 
 void Rational::Set(int64_t numer, int64_t denom) {
     int64_t gcd = std::gcd(std::abs(numer), denom);
-    numer_ = static_cast<int>(numer / gcd);
-    denom_ = static_cast<int>(denom / gcd);
+    *this = Rational(static_cast<int>(numer / gcd), static_cast<int>(denom / gcd));
 }
 
 Rational operator+(const Rational& ratio) {
