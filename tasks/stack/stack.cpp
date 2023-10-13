@@ -1,8 +1,8 @@
 #include "stack.h"
 
-Node::Node(int32_t value, Node* previous) {
-    this->value = value;
-    this->previous = previous;
+#include <stdexcept>
+
+Node::Node(int32_t value, Node* previous) : value(value), previous(previous) {
 }
 
 Stack::Stack() {
@@ -26,7 +26,7 @@ void Stack::Push(int32_t value) {
 }
 
 void Stack::Pop() {
-    if (head_ == nullptr) {
+    if (size_ == 0) {
         return;
     }
     --size_;
@@ -36,6 +36,9 @@ void Stack::Pop() {
 }
 
 int32_t Stack::Top() const {
+    if (size_ == 0) {
+        throw std::out_of_range(0);
+    }
     return head_->value;
 }
 
@@ -53,5 +56,5 @@ void Stack::Clear() {
 }
 
 bool Stack::Empty() const {
-    return (head_ == nullptr);
+    return (size_ == 0);
 }
