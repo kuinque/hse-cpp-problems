@@ -1,8 +1,8 @@
 #include "queue.h"
 
-Node::Node(int32_t value, Node* next) {
-    this->value = value;
-    this->next = next;
+#include <stdexcept>
+
+Node::Node(int32_t value, Node* next) : value(value), next(next) {
 }
 
 Queue::Queue() {
@@ -44,7 +44,7 @@ void Queue::Pop() {
 
 int32_t Queue::Front() const {
     if (front_ == nullptr) {
-        return 0;
+        throw std::out_of_range(0);
     }
     return front_->value;
 }
@@ -63,5 +63,5 @@ void Queue::Clear() {
 }
 
 bool Queue::Empty() const {
-    return front_ == nullptr;
+    return (size_ == 0);
 }
