@@ -11,12 +11,7 @@ Stack::Stack() {
 }
 
 Stack::~Stack() {
-    while (head_ != nullptr) {
-        Node* tmp = head_->previous;
-        delete head_;
-        head_ = tmp;
-    }
-    size_ = 0;
+    Clear();
 }
 
 void Stack::Push(int32_t value) {
@@ -27,7 +22,7 @@ void Stack::Push(int32_t value) {
 
 void Stack::Pop() {
     if (size_ == 0) {
-        return;
+        throw std::logic_error("Stack is empty.");
     }
     --size_;
     Node* tmp = head_->previous;
@@ -37,7 +32,7 @@ void Stack::Pop() {
 
 int32_t Stack::Top() const {
     if (size_ == 0) {
-        throw std::out_of_range(0);
+        throw std::logic_error("Stack is empty.");
     }
     return head_->value;
 }
