@@ -12,12 +12,7 @@ Queue::Queue() {
 }
 
 Queue::~Queue() {
-    while (front_ != nullptr) {
-        Node* tmp = front_->next;
-        delete front_;
-        front_ = tmp;
-    }
-    size_ = 0;
+    Clear();
 }
 
 void Queue::Push(int32_t value) {
@@ -34,7 +29,7 @@ void Queue::Push(int32_t value) {
 
 void Queue::Pop() {
     if (front_ == nullptr) {
-        return;
+        throw std::logic_error("Queue is empty.");
     }
     --size_;
     Node* tmp = front_->next;
@@ -44,7 +39,7 @@ void Queue::Pop() {
 
 int32_t Queue::Front() const {
     if (front_ == nullptr) {
-        throw std::out_of_range(0);
+        throw std::logic_error("Queue is empty.");
     }
     return front_->value;
 }
