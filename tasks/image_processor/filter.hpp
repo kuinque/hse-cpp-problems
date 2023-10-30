@@ -247,17 +247,17 @@ public:
     explicit Blur(Matrix* origin) {
         pixel_array_ = origin;
     }
-    void PixelContribution(std::tuple<double, double, double>& origin, const int32_t x0, const int32_t y0,
-                           const int32_t x, int32_t y, double sigma_mult) {
-        double coefficient = static_cast<double>(abs(x0 - x) * abs(x0 - x) + abs(y0 - y) * abs(y0 - y)) / sigma_mult;
-        coefficient = 1.0 / pow(E, coefficient);
+    void PixelContribution(std::tuple<double, double, double>& origin, const int32_t xy_offset,
+                           double* offset_coefficient) {
+        double coefficient = offset_coefficient[xy_offset];
         get<0>(origin) *= coefficient;
         get<1>(origin) *= coefficient;
         get<2>(origin) *= coefficient;
     }
 
     void HeightCalculate(std::tuple<double, double, double>** temp, const int32_t height, const int32_t width,
-                         const double common_multiplier, const double sigma_mult, const int32_t sigma) {
+                         const double common_multiplier, const double sigma_mult, const int32_t sigma,
+                         double* offset_coefficient) {
         for (int32_t x0 = 0; x0 < height; ++x0) {
             for (int32_t y0 = 0; y0 < width; ++y0) {
                 // no sense to cosider bigger matrix
@@ -269,7 +269,7 @@ public:
                     Matrix::RGB rgb = pixel_array_->GetNearest(x, y);
                     std::tuple<double, double, double> next_pixel = std::make_tuple(
                         static_cast<double>(rgb.r), static_cast<double>(rgb.g), static_cast<double>(rgb.b));
-                    PixelContribution(next_pixel, x0, y0, x, y, sigma_mult);
+                    PixelContribution(next_pixel, MATRIX_CONSIDER_SIZE * sigma + x_offset, offset_coefficient);
                     get<0>(temp[x0][y0]) += get<0>(next_pixel);
                     get<1>(temp[x0][y0]) += get<1>(next_pixel);
                     get<2>(temp[x0][y0]) += get<2>(next_pixel);
@@ -284,7 +284,8 @@ public:
     }
 
     void WidthCalculate(std::tuple<double, double, double>** temp, const int32_t height, const int32_t width,
-                        const double common_multiplier, const double sigma_mult, const int32_t sigma) {
+                        const double common_multiplier, const double sigma_mult, const int32_t sigma,
+                        double* offset_coefficient) {
         for (int32_t x0 = 0; x0 < height; ++x0) {
             for (int32_t y0 = 0; y0 < width; ++y0) {
                 std::tuple<double, double, double> pixels_sum{0, 0, 0};
@@ -295,7 +296,7 @@ public:
                     int32_t y = y0 + y_offset;
                     NearestCoordinates(x, y, height, width);
                     std::tuple<double, double, double> near_pixel = temp[x][y];
-                    PixelContribution(near_pixel, x0, y0, x0, y0 + y_offset, sigma_mult);
+                    PixelContribution(near_pixel, MATRIX_CONSIDER_SIZE * sigma + y_offset, offset_coefficient);
                     get<0>(pixels_sum) += get<0>(near_pixel);
                     get<1>(pixels_sum) += get<1>(near_pixel);
                     get<2>(pixels_sum) += get<2>(near_pixel);
@@ -334,9 +335,19 @@ public:
         }
         double sigma_mult = (SIGMA_COEFFICIENT * sigma * sigma);
         double common_multiplier = 1.0 / (sigma_mult * PI);
-        HeightCalculate(double_pixels, height, width, common_multiplier, sigma_mult, static_cast<int32_t>(sigma));
-        WidthCalculate(double_pixels, height, width, common_multiplier, sigma_mult, static_cast<int32_t>(sigma));
+        int32_t sigma_rounded = static_cast<int32_t>(round(sigma));
+        double* offset_coefficient = new double[MATRIX_CONSIDER_SIZE * sigma_rounded * 2 + 2];
+        for (int32_t xy_offset = -MATRIX_CONSIDER_SIZE * sigma_rounded;
+             xy_offset <= MATRIX_CONSIDER_SIZE * sigma_rounded; ++xy_offset) {
+            double coefficient = static_cast<double>(xy_offset * xy_offset) / sigma_mult;
+            coefficient = 1.0 / pow(E, coefficient);
+            offset_coefficient[MATRIX_CONSIDER_SIZE * sigma_rounded + xy_offset] = coefficient;
+        }
 
+        HeightCalculate(double_pixels, height, width, common_multiplier, sigma_mult, sigma_rounded, offset_coefficient);
+        WidthCalculate(double_pixels, height, width, common_multiplier, sigma_mult, sigma_rounded, offset_coefficient);
+
+        delete[] offset_coefficient;
         for (int x = 0; x < height; ++x) {
             delete[] double_pixels[x];
         }
