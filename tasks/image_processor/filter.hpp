@@ -181,7 +181,7 @@ public:
         pixel_array_ = origin;
     }
     void ThresholdPixel(Matrix::RGB& origin, const uint8_t threshold) {
-        if (origin.r > threshold || origin.g > threshold || origin.b > threshold) {
+        if (origin.r > threshold) {
             origin = Matrix::WHITE_PIXEL;
             return;
         }
@@ -216,7 +216,8 @@ public:
 
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
-        uint8_t threshold = static_cast<uint8_t>(round(std::stod(parametrs[0])));
+        uint8_t threshold =
+            static_cast<uint8_t>(round(std::stod(parametrs[0]) * static_cast<double>(Matrix::RGB::MAX_COLOR)));
         if (threshold < 0 || threshold > Matrix::RGB::MAX_COLOR) {
             throw std::logic_error("Threshold should be in range [0, 1].");
         }
