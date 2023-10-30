@@ -28,8 +28,8 @@ public:
     // assume that we are working with GCC
     struct DIBHeader {
         uint32_t dib_size;
-        int32_t width;
         int32_t height;
+        int32_t width;
         uint16_t color_planes_num;
         uint16_t bits_per_pixel;
         uint32_t compression;
