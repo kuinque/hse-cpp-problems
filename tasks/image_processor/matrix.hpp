@@ -57,13 +57,9 @@ public:
             get<2>(pixel_sum) = static_cast<int32_t>(pixel.b) * coefficient;
             return pixel_sum;
         }
-        friend std::ostream &operator<<(std::ostream &os, const RGB &rgb) {
-            return os << "RGB: " << static_cast<int>(rgb.r) << " " << static_cast<int>(rgb.g) << " "
-                      << static_cast<int>(rgb.b);
-        }
     } __attribute__((packed));
 
-    Matrix() : data_(new RGB{}), rows_num_(0), cols_num_(0) {
+    Matrix() : data_(new RGB[0]), rows_num_(0), cols_num_(0) {
     }
 
     Matrix(const int32_t rows_num, const int32_t cols_num)
@@ -139,7 +135,7 @@ public:
         data_[Offset(x, y)] = color;
     }
 
-    bool InBounds(const std::int32_t x, const std::int32_t y) const {
+    bool InBounds(const int32_t x, const int32_t y) const {
         return (x >= 0) && (x < rows_num_) && (y >= 0) && (y < cols_num_);
     }
 
@@ -154,7 +150,7 @@ protected:
         std::swap(copy.cols_num_, origin.cols_num_);
     }
 
-    int32_t Offset(const std::int32_t x, const std::int32_t y) const {
+    int32_t Offset(const int32_t x, const int32_t y) const {
         return (x * cols_num_ + y);
     }
 
