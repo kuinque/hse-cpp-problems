@@ -168,7 +168,7 @@ protected:
             throw std::runtime_error("DIBHeader is not open.");
         }
         // specify offset from begin of file
-        // file_.seekg(bmp_header_.offset);
+        file_.seekg(bmp_header_.offset);
         pixel_array_ = Matrix{dib_header_.height, dib_header_.width};
         int32_t row_size = pixel_array_.GetColumnsNumber() * 3 + (4 - ((pixel_array_.GetColumnsNumber() * 3) % 4)) % 4;
         uint8_t row[row_size];
