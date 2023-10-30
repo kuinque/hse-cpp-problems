@@ -48,8 +48,8 @@ public:
     }
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
-        int32_t new_height = std::stoi(parametrs[0]);
-        int32_t new_width = std::stoi(parametrs[1]);
+        int32_t new_height = std::stoi(parametrs[1]);
+        int32_t new_width = std::stoi(parametrs[0]);
         if (new_width <= 0 || new_width > pixel_array_->GetColumnsNumber() || new_height <= 0 ||
             new_height > pixel_array_->GetRowsNumber()) {
             throw std::logic_error("Canoot be cropped to that size.");
@@ -79,9 +79,9 @@ public:
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t width = pixel_array_->GetColumnsNumber();
         int32_t height = pixel_array_->GetRowsNumber();
-        Matrix temp(width, height);
-        for (int32_t x = 0; x < width; ++x) {
-            for (int32_t y = 0; y < height; ++y) {
+        Matrix temp(height, width);
+        for (int32_t x = 0; x < height; ++x) {
+            for (int32_t y = 0; y < width; ++y) {
                 Matrix::RGB rgb = pixel_array_->Get(x, y);
                 rgb *= PIXEL_COEFFICIENT;
                 rgb.r = rgb.g = rgb.b = (rgb.r + rgb.g + rgb.b);
@@ -110,9 +110,9 @@ public:
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t width = pixel_array_->GetColumnsNumber();
         int32_t height = pixel_array_->GetRowsNumber();
-        Matrix temp(width, height);
-        for (int32_t x = 0; x < width; ++x) {
-            for (int32_t y = 0; y < height; ++y) {
+        Matrix temp(height, width);
+        for (int32_t x = 0; x < height; ++x) {
+            for (int32_t y = 0; y < width; ++y) {
                 Matrix::RGB rgb = pixel_array_->Get(x, y);
                 rgb.r = Matrix::RGB::MAX_COLOR - rgb.r;
                 rgb.g = Matrix::RGB::MAX_COLOR - rgb.g;
@@ -155,9 +155,9 @@ public:
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t width = pixel_array_->GetColumnsNumber();
         int32_t height = pixel_array_->GetRowsNumber();
-        Matrix temp(width, height);
-        for (int32_t x = 0; x < width; ++x) {
-            for (int32_t y = 0; y < height; ++y) {
+        Matrix temp(height, width);
+        for (int32_t x = 0; x < height; ++x) {
+            for (int32_t y = 0; y < width; ++y) {
                 ChangeCurrentPixel(temp, x, y);
             }
         }
@@ -221,9 +221,9 @@ public:
         gs.ApplyFilter(0, {});
         int32_t width = pixel_array_->GetColumnsNumber();
         int32_t height = pixel_array_->GetRowsNumber();
-        Matrix temp(width, height);
-        for (int32_t x = 0; x < width; ++x) {
-            for (int32_t y = 0; y < height; ++y) {
+        Matrix temp(height, width);
+        for (int32_t x = 0; x < height; ++x) {
+            for (int32_t y = 0; y < width; ++y) {
                 TransformPixel(temp, x, y, threshold);
             }
         }
