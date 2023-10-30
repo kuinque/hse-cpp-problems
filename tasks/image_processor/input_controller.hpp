@@ -9,8 +9,6 @@
 #include "bmp_image.hpp"
 #include "filter.hpp"
 
-using(Filter::FilterConstructorReference)(Filter*)(&Matrix);
-
 class InputController {
 public:
     void InputFlow(const int argc, char* argv[]) {
