@@ -54,7 +54,7 @@ public:
             throw std::logic_error("Canoot be cropped to that size.");
         }
         new_height = std::min(pixel_array_->GetRowsNumber(), new_height);
-        new_width = std::min(pixel_array_->GetRowsNumber(), new_width);
+        new_width = std::min(pixel_array_->GetColumnsNumber(), new_width);
         Matrix temp(new_height, new_width);
         for (int32_t x = 0; x < new_height; ++x) {
             for (int32_t y = 0; y < new_width; ++y) {
