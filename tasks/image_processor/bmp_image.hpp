@@ -95,14 +95,18 @@ public:
         if (!ofs.is_open()) {
             throw std::runtime_error("Cannot save file.");
         }
+        // takes into padding
         int32_t row_size = pixel_array_.GetColumnsNumber() * 3 + (4 - ((pixel_array_.GetColumnsNumber() * 3) % 4)) % 4;
+        // writes bmp_header
         bmp_header_.file_size = sizeof(bmp_header_) + sizeof(dib_header_) + row_size * pixel_array_.GetRowsNumber();
         bmp_header_.offset = sizeof(bmp_header_) + sizeof(dib_header_);
         ofs.write(reinterpret_cast<const char *>(&bmp_header_), sizeof(bmp_header_));
+        // writes dib_header
         dib_header_.height = pixel_array_.GetRowsNumber();
         dib_header_.width = pixel_array_.GetColumnsNumber();
         ofs.write(reinterpret_cast<const char *>(&dib_header_), sizeof(dib_header_));
         uint8_t row[row_size];
+        // writes pixel matrix
         for (int32_t x = pixel_array_.GetRowsNumber() - 1; x >= 0; --x) {
             int32_t row_pointer = 0;
             for (int32_t y = 0; y < pixel_array_.GetColumnsNumber(); ++y) {
@@ -167,7 +171,7 @@ protected:
         if (!file_.is_open()) {
             throw std::runtime_error("DIBHeader is not open.");
         }
-        // specify offset from begin of file
+        // specify offset from bmp_header offset of file
         file_.seekg(bmp_header_.offset);
         pixel_array_ = Matrix{dib_header_.height, dib_header_.width};
         int32_t row_size = pixel_array_.GetColumnsNumber() * 3 + (4 - ((pixel_array_.GetColumnsNumber() * 3) % 4)) % 4;
