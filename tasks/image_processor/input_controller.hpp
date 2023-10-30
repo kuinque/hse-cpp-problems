@@ -48,7 +48,6 @@ private:
     }
 
     void InputAnalyze(const int argc, char* argv[]) {
-        static const int NUMBER_BASE = 10;
         for (int argc_num = 3; argc_num < argc; ++argc_num) {
             if (argv[argc_num][0] != '-') {
                 throw std::runtime_error("Filter name should begin from -.");
@@ -60,7 +59,6 @@ private:
             while (argc_num + parametr_num + 1 < argc && argv[argc_num + parametr_num + 1][0] != '-') {
                 ++parametr_num;
             }
-            Filter* filter = nullptr;
             std::string filter_name = argv[argc_num];
             if (filter_name == "-crop") {
                 Crop crop{pixel_array_};
