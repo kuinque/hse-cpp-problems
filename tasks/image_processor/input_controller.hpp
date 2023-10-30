@@ -44,6 +44,7 @@ private:
         std::cout << "[-sharp] - improves sharpness" << std::endl;
         std::cout << "[-edge] [threshold] - edge detection" << std::endl;
         std::cout << "[-blur] [sigma] - gaussian blur" << std::endl;
+        std::cout << "[-retro] - retro filter" << std::endl;
     }
 
     void InputAnalyze(const int argc, char* argv[]) {
@@ -83,14 +84,18 @@ private:
                 Blur blur{pixel_array_};
                 blur.ApplyFilter(parametr_num, argv + argc_num + 1);
             }
+            if (filter_name == "-retro") {
+                Retro retro{pixel_array_};
+                retro.ApplyFilter(parametr_num, argv + argc_num + 1);
+            }
             argc_num += parametr_num;
         }
     }
 
 private:
     Matrix* pixel_array_;
-    std::map<std::string, int> filter_map_ = {{"-crop", 2},  {"-gs", 0},   {"-neg", 0},
-                                              {"-sharp", 0}, {"-edge", 1}, {"-blur", 1}};
+    std::map<std::string, int> filter_map_ = {{"-crop", 2}, {"-gs", 0},   {"-neg", 0},  {"-sharp", 0},
+                                              {"-edge", 1}, {"-blur", 1}, {"-retro", 0}};
 };
 
 #endif  // PRECPPPROJECT_IMAGE_CONTROLLER_H
