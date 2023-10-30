@@ -84,9 +84,11 @@ public:
         for (int32_t x = 0; x < height; ++x) {
             for (int32_t y = 0; y < width; ++y) {
                 Matrix::RGB rgb = pixel_array_->Get(x, y);
-                uint8_t new_color = static_cast<uint8_t>(round(get<0>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.r) +
-                                                               get<1>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.g) +
-                                                               get<2>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.b)));
+                uint8_t new_color = static_cast<uint8_t>(
+                    round(get<0>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.r / 255.0) +   // NOLINT
+                          get<1>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.g / 255.0) +   // NOLINT
+                          get<2>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.b / 255.0)) *  // NOLINT
+                    255.0);                                                                  // NOLINT
                 rgb.r = new_color;
                 rgb.g = new_color;
                 rgb.b = new_color;
