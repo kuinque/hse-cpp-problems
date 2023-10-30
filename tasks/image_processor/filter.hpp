@@ -26,11 +26,13 @@ protected:
     Matrix* pixel_array_;
 };
 
+// crop filter
 class Crop : public Filter {
 public:
     explicit Crop(Matrix* origin) {
         pixel_array_ = origin;
     }
+    // check if all parametrs are valid
     void CheckParametrsValidity(int parametrs_size, char* parametrs[]) override {
         if (parametrs_size != PARAMETRS_SIZE) {
             throw std::runtime_error("Should be 2 crop parametrs.");
@@ -46,10 +48,12 @@ public:
             throw std::runtime_error("Parametrs for crop not valid.");
         }
     }
+    // apply filter
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t new_height = std::stoi(parametrs[1]);
         int32_t new_width = std::stoi(parametrs[0]);
+        // check if new values are lower than 0
         if (new_width <= 0 || new_height <= 0) {
             throw std::logic_error("Canoot be cropped to that size.");
         }
@@ -66,16 +70,19 @@ public:
     static const int PARAMETRS_SIZE = 2;
 };
 
+// grey scale filter
 class GS : public Filter {
 public:
     explicit GS(Matrix* origin) {
         pixel_array_ = origin;
     }
+    // check if parametrs are valid
     void CheckParametrsValidity(int parametrs_size, char* parametrs[]) override {
         if (parametrs_size != PARAMETRS_SIZE) {
             throw std::runtime_error("Shouldn't be gs parametrs.");
         }
     }
+    // apply filter
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t width = pixel_array_->GetColumnsNumber();
@@ -83,12 +90,11 @@ public:
         Matrix temp(height, width);
         for (int32_t x = 0; x < height; ++x) {
             for (int32_t y = 0; y < width; ++y) {
+                // calculating new value for pixel
                 Matrix::RGB rgb = pixel_array_->Get(x, y);
-                uint8_t new_color = static_cast<uint8_t>(
-                    round(get<0>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.r / 255.0) +   // NOLINT
-                          get<1>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.g / 255.0) +   // NOLINT
-                          get<2>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.b / 255.0)) *  // NOLINT
-                    255.0);                                                                  // NOLINT
+                uint8_t new_color = static_cast<uint8_t>(round(get<0>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.r) +
+                                                               get<1>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.g) +
+                                                               get<2>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.b)));
                 rgb.r = new_color;
                 rgb.g = new_color;
                 rgb.b = new_color;
@@ -103,16 +109,19 @@ private:
     inline static const std::tuple<const double, const double, const double> PIXEL_COEFFICIENT{0.299, 0.587, 0.114};
 };
 
+// negative filter
 class Neg : public Filter {
 public:
     explicit Neg(Matrix* origin) {
         pixel_array_ = origin;
     }
+    // check if parametrs are valid
     void CheckParametrsValidity(int parametrs_size, char* parametrs[]) override {
         if (parametrs_size != PARAMETRS_SIZE) {
             throw std::runtime_error("Shouldn't be neg parametrs.");
         }
     }
+    // apply filter
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t width = pixel_array_->GetColumnsNumber();
@@ -120,6 +129,7 @@ public:
         Matrix temp(height, width);
         for (int32_t x = 0; x < height; ++x) {
             for (int32_t y = 0; y < width; ++y) {
+                // calculating new values
                 Matrix::RGB rgb = pixel_array_->Get(x, y);
                 rgb.r = Matrix::RGB::MAX_COLOR - rgb.r;
                 rgb.g = Matrix::RGB::MAX_COLOR - rgb.g;
@@ -134,15 +144,18 @@ private:
     static const int PARAMETRS_SIZE = 0;
 };
 
+// sharping filter
 class Sharp : public Filter {
 public:
     explicit Sharp(Matrix* origin) {
         pixel_array_ = origin;
     }
+    // culculates new pixel culors
     void ChangeCurrentPixel(Matrix& temp, const int32_t x, const int32_t y) {
         Matrix::RGB rgb = pixel_array_->Get(x, y);
         std::tuple<int32_t, int32_t, int32_t> current_pixel{0, 0, 0};
         for (int32_t pixel_num = 0; pixel_num < NEAR_PIXELS; ++pixel_num) {
+            // constants due to pixel matrix
             std::tuple<int32_t, int32_t, int32_t> near_pixel =
                 PIXEL_COEFFICIENT[pixel_num] *
                 pixel_array_->GetNearest(x + HEIGHT_OFFSET[pixel_num], y + WIDTH_OFFSET[pixel_num]);
@@ -153,11 +166,13 @@ public:
         rgb = current_pixel;
         temp.Set(x, y, rgb);
     }
+    // checks if parametrs are valid
     void CheckParametrsValidity(int parametrs_size, char* parametrs[]) override {
         if (parametrs_size != PARAMETRS_SIZE) {
             throw std::runtime_error("Shouldn't be sharp parametrs.");
         }
     }
+    // apply filter
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t width = pixel_array_->GetColumnsNumber();
@@ -179,11 +194,13 @@ private:
     inline static const int32_t HEIGHT_OFFSET[9] = {-1, -1, -1, 0, 0, 0, 1, 1, 1};
 };
 
+// edge filter
 class Edge : public Filter {
 public:
     explicit Edge(Matrix* origin) {
         pixel_array_ = origin;
     }
+    // applying pixel with threshold
     void ThresholdPixel(Matrix::RGB& origin, const uint8_t threshold) {
         if (origin.r > threshold) {
             origin = Matrix::WHITE_PIXEL;
@@ -191,11 +208,12 @@ public:
         }
         origin = Matrix::BLACK_PIXEL;
     }
-
+    // transforms pixel
     void TransformPixel(Matrix& temp, const int32_t x, const int32_t y, const int32_t threshold) {
         Matrix::RGB rgb = pixel_array_->Get(x, y);
         std::tuple<int32_t, int32_t, int32_t> current_pixel{0, 0, 0};
         for (int32_t pixel_num = 0; pixel_num < NEAR_PIXELS; ++pixel_num) {
+            // constants sue to pixel matrix
             std::tuple<int32_t, int32_t, int32_t> near_pixel =
                 PIXEL_COEFFICIENT[pixel_num] *
                 pixel_array_->GetNearest(x + HEIGHT_OFFSET[pixel_num], y + WIDTH_OFFSET[pixel_num]);
@@ -207,6 +225,7 @@ public:
         ThresholdPixel(rgb, threshold);
         temp.Set(x, y, rgb);
     }
+    // checks if parametrs are valid
     void CheckParametrsValidity(int parametrs_size, char* parametrs[]) override {
         if (parametrs_size != PARAMETRS_SIZE) {
             throw std::runtime_error("Should be 1 edge parametr.");
@@ -217,7 +236,7 @@ public:
             throw std::runtime_error("Parametr for edge not valid.");
         }
     }
-
+    // apply filter
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
         uint8_t threshold =
@@ -225,6 +244,7 @@ public:
         if (threshold < 0 || threshold > Matrix::RGB::MAX_COLOR) {
             throw std::logic_error("Threshold should be in range [0, 1].");
         }
+        // applying grey scales
         GS gs{pixel_array_};
         gs.ApplyFilter(0, {});
         int32_t width = pixel_array_->GetColumnsNumber();
@@ -251,6 +271,7 @@ public:
     explicit Blur(Matrix* origin) {
         pixel_array_ = origin;
     }
+    // calculates pixel contribution
     void PixelContribution(std::tuple<double, double, double>& origin, const int32_t xy_offset,
                            double* offset_coefficient) {
         double coefficient = offset_coefficient[xy_offset];
@@ -258,7 +279,7 @@ public:
         get<1>(origin) *= coefficient;
         get<2>(origin) *= coefficient;
     }
-
+    // calculates vertically
     void HeightCalculate(std::tuple<double, double, double>** temp, const int32_t height, const int32_t width,
                          const double common_multiplier, const double sigma_mult, const int32_t sigma,
                          double* offset_coefficient) {
@@ -281,12 +302,12 @@ public:
             }
         }
     }
-
+    // finds neares coordinates for x and y
     void NearestCoordinates(int32_t& x, int32_t& y, const int32_t height, const int32_t width) const {
         x = std::max(0, std::min(height - 1, x));
         y = std::max(0, std::min(width - 1, y));
     }
-
+    // calculates horizontally
     void WidthCalculate(std::tuple<double, double, double>** temp, const int32_t height, const int32_t width,
                         const double common_multiplier, const double sigma_mult, const int32_t sigma,
                         double* offset_coefficient) {
@@ -315,6 +336,7 @@ public:
             }
         }
     }
+    // checks if parametrs are valid
     void CheckParametrsValidity(int parametrs_size, char* parametrs[]) override {
         if (parametrs_size != PARAMETRS_SIZE) {
             throw std::runtime_error("Should be 1 blur parametrs.");
@@ -325,6 +347,7 @@ public:
             throw std::runtime_error("Parametr for blur not valid.");
         }
     }
+    // apply filter
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
         double sigma = std::stod(parametrs[0]);
@@ -337,9 +360,11 @@ public:
         for (int x = 0; x < height; ++x) {
             double_pixels[x] = new std::tuple<double, double, double>[width];
         }
+        // calculates necessary multipliers
         double sigma_mult = (SIGMA_COEFFICIENT * sigma * sigma);
         double common_multiplier = 1.0 / (sigma_mult * PI);
         int32_t sigma_rounded = static_cast<int32_t>(round(sigma));
+        // pre-calc of horizontal/vertical offset coefficients
         double* offset_coefficient = new double[MATRIX_CONSIDER_SIZE * sigma_rounded * 2 + 2];
         for (int32_t xy_offset = -MATRIX_CONSIDER_SIZE * sigma_rounded;
              xy_offset <= MATRIX_CONSIDER_SIZE * sigma_rounded; ++xy_offset) {
@@ -366,16 +391,19 @@ private:
     inline static const double E = std::exp(1.0);
 };
 
+// retro filter
 class Retro : public Filter {
 public:
     explicit Retro(Matrix* origin) {
         pixel_array_ = origin;
     }
+    // checks if parametrs are valid
     void CheckParametrsValidity(int parametrs_size, char* parametrs[]) override {
         if (parametrs_size != PARAMETRS_SIZE) {
             throw std::runtime_error("Shouldn't be neg parametrs.");
         }
     }
+    // apply filter
     void ApplyFilter(int parametrs_size, char* parametrs[]) override {
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t width = pixel_array_->GetColumnsNumber();
@@ -386,15 +414,19 @@ public:
                 Matrix::RGB rgb = pixel_array_->Get(x, y);
                 std::tuple<int32_t, int32_t, int32_t> pixel = {static_cast<int32_t>(rgb.r), static_cast<int32_t>(rgb.g),
                                                                static_cast<int32_t>(rgb.b)};
+                // reduces brightness
                 get<0>(pixel) -= REDUCE_BRIGHTNESS;
                 get<1>(pixel) -= REDUCE_BRIGHTNESS;
                 get<2>(pixel) -= REDUCE_BRIGHTNESS;
-                get<0>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<0>(pixel)) * REDUCE_BRIGHTNESS));
-                get<1>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<1>(pixel)) * REDUCE_BRIGHTNESS));
-                get<2>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<1>(pixel)) * REDUCE_BRIGHTNESS));
-                get<0>(pixel) -= COLOR_CORRECTION;
+                // contrasts picture
+                get<0>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<0>(pixel)) * CONTRAST_COEFFICIENT));
+                get<1>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<1>(pixel)) * CONTRAST_COEFFICIENT));
+                get<2>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<1>(pixel)) * CONTRAST_COEFFICIENT));
+                // reconfiguration of colors
+                get<0>(pixel) += COLOR_CORRECTION;
                 get<1>(pixel) -= COLOR_CORRECTION;
-                get<2>(pixel) -= COLOR_CORRECTION;
+                get<2>(pixel) += COLOR_CORRECTION;
+                // random noise on picture
                 int32_t noise_r = rand() % (RANDOM_NOISE * 2);
                 int32_t noise_g = rand() % (RANDOM_NOISE * 2);
                 int32_t noise_b = rand() % (RANDOM_NOISE * 2);

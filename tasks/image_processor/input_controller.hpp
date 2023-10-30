@@ -11,10 +11,8 @@
 
 class InputController {
 public:
+    // reads file input
     void InputFlow(const int argc, char* argv[]) {
-        // std::string input_path = "/Users/krivetskyy/hse_work/image_processor/filter_images/lenna.bmp";
-        // std::string output_path = "/Users/krivetskyy/hse_work/image_processor/filter_images/lenna_crop_blur.bmp";
-
         if (argc == 1) {
             InputInfo();
             return;
@@ -33,6 +31,7 @@ public:
     }
 
 private:
+    // outputs info about filters
     void InputInfo() {
         std::cout << "{name of program} {input path} {output path} [-{name of filter 1} [filter param 1] [filter param "
                      "2] ...] [-{name of filter 2} [filter param 1] [filter param 2] ...] ..."
@@ -46,7 +45,7 @@ private:
         std::cout << "[-blur] [sigma] - gaussian blur" << std::endl;
         std::cout << "[-retro] - retro filter" << std::endl;
     }
-
+    // analyze parametrs and filters
     void InputAnalyze(const int argc, char* argv[]) {
         for (int argc_num = 3; argc_num < argc; ++argc_num) {
             if (argv[argc_num][0] != '-') {
