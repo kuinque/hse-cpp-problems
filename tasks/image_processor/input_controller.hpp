@@ -82,6 +82,7 @@ private:
                 Blur blur{pixel_array_};
                 blur.ApplyFilter(parametr_num, argv + argc_num + 1);
             }
+            argc_num += parametr_num;
         }
     }
 
