@@ -26,8 +26,8 @@ public:
         std::string output_path = argv[2];
         BMPImage image;
         image.Open(input_path);
+        image.ReadBmp();
         pixel_array_ = image.GetMatrixReference();
-        throw std::logic_error(std::to_string(pixel_array_->GetColumnsNumber()));
         InputAnalyze(argc, argv);
         image.SaveBmp(output_path);
     }
