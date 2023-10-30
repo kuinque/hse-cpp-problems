@@ -52,7 +52,9 @@ public:
         int32_t new_width = std::stoi(parametrs[0]);
         if (new_width <= 0 || new_width > pixel_array_->GetColumnsNumber() || new_height <= 0 ||
             new_height > pixel_array_->GetRowsNumber()) {
-            throw std::logic_error("Canoot be cropped to that size.");
+            throw std::logic_error("Canoot be cropped to that size." + std::to_string(pixel_array_->GetRowsNumber()) +
+                                   " " + std::to_string(pixel_array_->GetColumnsNumber()) + std::to_string(new_height) +
+                                   " " + std::to_string(new_width));
         }
         Matrix temp(new_height, new_width);
         for (int32_t x = 0; x < new_height; ++x) {
