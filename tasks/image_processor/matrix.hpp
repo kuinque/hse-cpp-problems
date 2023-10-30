@@ -44,12 +44,6 @@ public:
         bool operator=(const RGB origin) const {
             return std::tie(r, g, b) == std::tie(origin.r, origin.g, origin.b);
         }
-        RGB &operator*=(const std::tuple<double, double, double> &coefficient) {
-            r = static_cast<uint8_t>(static_cast<double>(r) * get<0>(coefficient));
-            g = static_cast<uint8_t>(static_cast<double>(g) * get<1>(coefficient));
-            b = static_cast<uint8_t>(static_cast<double>(b) * get<2>(coefficient));
-            return *this;
-        }
         friend std::tuple<int32_t, int32_t, int32_t> operator*(const int32_t coefficient, const RGB &pixel) {
             std::tuple<int32_t, int32_t, int32_t> pixel_sum;
             get<0>(pixel_sum) = static_cast<int32_t>(pixel.r) * coefficient;

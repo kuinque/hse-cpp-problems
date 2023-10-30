@@ -143,7 +143,7 @@ public:
         for (int32_t pixel_num = 0; pixel_num < NEAR_PIXELS; ++pixel_num) {
             std::tuple<int32_t, int32_t, int32_t> near_pixel =
                 PIXEL_COEFFICIENT[pixel_num] *
-                pixel_array_->GetNearest(x + WIDTH_OFFSET[pixel_num], y + HEIGHT_OFFSET[pixel_num]);
+                pixel_array_->GetNearest(x + HEIGHT_OFFSET[pixel_num], y + WIDTH_OFFSET[pixel_num]);
             get<0>(current_pixel) += get<0>(near_pixel);
             get<1>(current_pixel) += get<1>(near_pixel);
             get<2>(current_pixel) += get<2>(near_pixel);
@@ -196,7 +196,7 @@ public:
         for (int32_t pixel_num = 0; pixel_num < NEAR_PIXELS; ++pixel_num) {
             std::tuple<int32_t, int32_t, int32_t> near_pixel =
                 PIXEL_COEFFICIENT[pixel_num] *
-                pixel_array_->GetNearest(x + WIDTH_OFFSET[pixel_num], y + HEIGHT_OFFSET[pixel_num]);
+                pixel_array_->GetNearest(x + HEIGHT_OFFSET[pixel_num], y + WIDTH_OFFSET[pixel_num]);
             get<0>(current_pixel) += get<0>(near_pixel);
             get<1>(current_pixel) += get<1>(near_pixel);
             get<2>(current_pixel) += get<2>(near_pixel);
