@@ -84,9 +84,9 @@ public:
         for (int32_t x = 0; x < height; ++x) {
             for (int32_t y = 0; y < width; ++y) {
                 Matrix::RGB rgb = pixel_array_->Get(x, y);
-                uint8_t new_color = static_cast<uint8_t>(get<0>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.r) +
-                                                         get<1>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.g) +
-                                                         get<2>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.b));
+                uint8_t new_color = static_cast<uint8_t>(round(get<0>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.r) +
+                                                               get<1>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.g) +
+                                                               get<2>(PIXEL_COEFFICIENT) * static_cast<double>(rgb.b)));
                 rgb.r = new_color;
                 rgb.g = new_color;
                 rgb.b = new_color;
@@ -362,6 +362,57 @@ private:
     inline static const double SIGMA_COEFFICIENT = 2.0;
     inline static const double PI = std::atan(1.0) * 4.0;
     inline static const double E = std::exp(1.0);
+};
+
+class Retro : public Filter {
+public:
+    explicit Retro(Matrix* origin) {
+        pixel_array_ = origin;
+    }
+    void CheckParametrsValidity(int parametrs_size, char* parametrs[]) override {
+        if (parametrs_size != PARAMETRS_SIZE) {
+            throw std::runtime_error("Shouldn't be neg parametrs.");
+        }
+    }
+    void ApplyFilter(int parametrs_size, char* parametrs[]) override {
+        CheckParametrsValidity(parametrs_size, parametrs);
+        int32_t width = pixel_array_->GetColumnsNumber();
+        int32_t height = pixel_array_->GetRowsNumber();
+        Matrix temp(height, width);
+        for (int32_t x = 0; x < height; ++x) {
+            for (int32_t y = 0; y < width; ++y) {
+                Matrix::RGB rgb = pixel_array_->Get(x, y);
+                std::tuple<int32_t, int32_t, int32_t> pixel = {static_cast<int32_t>(rgb.r), static_cast<int32_t>(rgb.g),
+                                                               static_cast<int32_t>(rgb.b)};
+                get<0>(pixel) -= REDUCE_BRIGHTNESS;
+                get<1>(pixel) -= REDUCE_BRIGHTNESS;
+                get<2>(pixel) -= REDUCE_BRIGHTNESS;
+                get<0>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<0>(pixel)) * REDUCE_BRIGHTNESS));
+                get<1>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<1>(pixel)) * REDUCE_BRIGHTNESS));
+                get<2>(pixel) = static_cast<int32_t>(round(static_cast<double>(get<1>(pixel)) * REDUCE_BRIGHTNESS));
+                get<0>(pixel) -= COLOR_CORRECTION;
+                get<1>(pixel) -= COLOR_CORRECTION;
+                get<2>(pixel) -= COLOR_CORRECTION;
+                int32_t noise_r = rand() % (RANDOM_NOISE * 2);
+                int32_t noise_g = rand() % (RANDOM_NOISE * 2);
+                int32_t noise_b = rand() % (RANDOM_NOISE * 2);
+                get<0>(pixel) += noise_r - RANDOM_NOISE;
+                get<1>(pixel) += noise_g - RANDOM_NOISE;
+                get<2>(pixel) += noise_b - RANDOM_NOISE;
+
+                rgb = pixel;
+                temp.Set(x, y, rgb);
+            }
+        }
+        (*pixel_array_) = temp;
+    }
+
+private:
+    static const int PARAMETRS_SIZE = 0;
+    static const int32_t REDUCE_BRIGHTNESS = -30;
+    inline static const double CONTRAST_COEFFICIENT = 1.2;
+    static const int32_t COLOR_CORRECTION = 10;
+    static const int32_t RANDOM_NOISE = 10;
 };
 
 #endif  // PRECPPPROJECT_FILTER_H
