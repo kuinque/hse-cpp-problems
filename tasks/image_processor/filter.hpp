@@ -50,12 +50,11 @@ public:
         CheckParametrsValidity(parametrs_size, parametrs);
         int32_t new_height = std::stoi(parametrs[1]);
         int32_t new_width = std::stoi(parametrs[0]);
-        if (new_width <= 0 || new_width > pixel_array_->GetColumnsNumber() || new_height <= 0 ||
-            new_height > pixel_array_->GetRowsNumber()) {
-            throw std::logic_error("Canoot be cropped to that size." + std::to_string(pixel_array_->GetRowsNumber()) +
-                                   " " + std::to_string(pixel_array_->GetColumnsNumber()) + std::to_string(new_height) +
-                                   " " + std::to_string(new_width));
+        if (new_width <= 0 || new_height <= 0) {
+            throw std::logic_error("Canoot be cropped to that size.");
         }
+        new_height = std::min(pixel_array_->GetRowsNumber(), new_height);
+        new_width = std::min(pixel_array_->GetRowsNumber(), new_width);
         Matrix temp(new_height, new_width);
         for (int32_t x = 0; x < new_height; ++x) {
             for (int32_t y = 0; y < new_width; ++y) {
@@ -85,9 +84,10 @@ public:
         for (int32_t x = 0; x < height; ++x) {
             for (int32_t y = 0; y < width; ++y) {
                 Matrix::RGB rgb = pixel_array_->Get(x, y);
-                rgb.r = rgb.g = rgb.b = static_cast<uint8_t>(static_cast<double>(rgb.r) * get<0>(PIXEL_COEFFICIENT) +
-                                                             static_cast<double>(rgb.g) * get<1>(PIXEL_COEFFICIENT) +
-                                                             static_cast<double>(rgb.b) * get<2>(PIXEL_COEFFICIENT));
+                rgb.r = rgb.g = rgb.b =
+                    static_cast<uint8_t>(round(static_cast<double>(rgb.r) * get<0>(PIXEL_COEFFICIENT) +
+                                               static_cast<double>(rgb.g) * get<1>(PIXEL_COEFFICIENT) +
+                                               static_cast<double>(rgb.b) * get<2>(PIXEL_COEFFICIENT)));
                 temp.Set(x, y, rgb);
             }
         }
