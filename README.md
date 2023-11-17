@@ -1,11 +1,6 @@
-# С++ курс
+# С++ course
 
-Прочитайте [SETUP.md](SETUP.md) и сдайте первую задачу.
-
-Дедлайны по задачам можно наблюдать на сайте https://cpp-hse.ru/
-
-Стайлгайд описан в [STYLEGUIDE.md](STYLEGUIDE.md).
-
-Правила оценивания в [SCORE.md](SCORE.md).
-
-Темы лекций в [LECTURES.md](LECTURES.md).
+Repository from HSE University c++ course.
+Tasks can be find in [tasks](<https://github.com/kuinque/hse-cpp-problems/tree/main/tasks>).
+This is my implementation of some interestion problems.
+All code is written in Google codestyle.
